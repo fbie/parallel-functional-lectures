@@ -45,6 +45,8 @@
         [y2 (* 2 y)]) ;; Compute 2 * y and bind it to y2.
     (+ x2 y2)))       ;; Add the two results.
 
+(double-and-add 42 34)
+
 ;; In functional programming languages, state is immutable. If you
 ;; bind a value to a name via let, you are not allowed to change it
 ;; again. Therefore, we cannot use for-loops with counters as you know
@@ -68,7 +70,7 @@
 (define (fib n)
   (if (< n 1)
       1 ;; Nothing to do, return 1.
-      (* (fib (- n 2)) (fib (- n 1))))) ;; Recurse left and right and multiply results.
+      (+ (fib (- n 2)) (fib (- n 1))))) ;; Recurse left and right and multiply results.
 
 (fib 1)
 (fib 2)
