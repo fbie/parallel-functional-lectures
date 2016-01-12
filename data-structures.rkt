@@ -18,7 +18,7 @@
 
 ;; We can define functions via the define keyword.
 
-(define (add-one [n : Real])
+(define (add-one [n : Integer])
   (+ n 1)) ;; No return-statement needed. The last expression is the
            ;; return value of the body.
 
@@ -36,7 +36,7 @@
 ;; The type of the function can be written like this, above the
 ;; "define" line. -> means function, the last type in the list is the
 ;; return type, the others are parameter types.
-(: double-and-add (-> Real Real Real))
+(: double-and-add (-> Integer Integer Integer))
 (define (double-and-add x y)
   (let ([x2 (* 2 x)]               ;; Compute 2 * x and bind it to x2.
         [y2 (* 2 y)])              ;; Compute 2 * y and bind it to y2.
@@ -50,7 +50,7 @@
 ;; them from Java or C. Instead, we use recursion to implement
 ;; functions like is-even? or fib:
 
-(: is-even? (-> Real Boolean))
+(: is-even? (-> Integer Boolean))
 (define (is-even? n)
   (if (= n 0)
       #t
@@ -63,7 +63,7 @@
 (even? 42)
 (even? 23)
 
-(: fib (-> Real Real))
+(: fib (-> Integer Integer))
 (define (fib n)
   (if (< n 1)
       1 ;; Nothing to do, return 1.
@@ -294,7 +294,7 @@
 ;; list. Say you have a list of grades for students, but you graded
 ;; them too low. Everyone should get 10% more. So you write:
 
-(struct Student ([name : String] [grade : Real]) #:transparent)
+(struct Student ([name : String] [grade : Integer]) #:transparent)
 
 (: better-grade (-> Student Student))
 (define (better-grade s)
