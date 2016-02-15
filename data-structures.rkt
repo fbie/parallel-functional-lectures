@@ -29,6 +29,20 @@
 
 ;; Q: How would you write a function times-two?
 
+;; Q: Functions also have types. What type does add-one have?
+
+add-one
+
+;; Typed Racket has (limited) type-inferrence capabilities. This means
+;; that you do not need to annotate a function with all types, because
+;; the compiler can infer the types of the parameters based on how you
+;; use them. For instance, if you write x + 3.14, then x must be a
+;; Real, because you can only add Reals to Reals.
+
+;; This works only to some extent and usually, in Typed Racket you
+;; need to annotate quite a bit. We will look at this again at a later
+;; point in time during the course.
+
 ;; Assignment is done by let-bindings. A bound value is only
 ;; accessible in the body of the let binding. This is comparable to
 ;; the scope of a variable in Java, where you would say int x2 = 2 * x;:
@@ -36,13 +50,16 @@
 ;; The type of the function can be written like this, above the
 ;; "define" line. -> means function, the last type in the list is the
 ;; return type, the others are parameter types.
-(: double-and-add (-> Integer Integer Integer))
-(define (double-and-add x y)
+(define (double-and-add [x : Integer] [y : Integer])
   (let ([x2 (* 2 x)]               ;; Compute 2 * x and bind it to x2.
         [y2 (* 2 y)])              ;; Compute 2 * y and bind it to y2.
     (+ x2 y2)))                    ;; Add the two results.
 
 (double-and-add 42 23)
+
+;; Q: What type does double-and-add have?
+
+double-and-add
 
 ;; In functional programming languages, state is immutable. If you
 ;; bind a value to a name via let, you are not allowed to change it
