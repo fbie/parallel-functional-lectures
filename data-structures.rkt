@@ -289,14 +289,14 @@ double-and-add
 ;; we want to execute some function only if there actually is a value
 ;; present:
 
-(: maybe-do (All (A B) (-> (-> A B) (Maybe A) (Maybe B))))
-(define (maybe-do f m)
+(: maybe-map (All (A B) (-> (-> A B) (Maybe A) (Maybe B))))
+(define (maybe-map f m)
   (match m
     [(None) (None)]           ;; No value, nothing to do.
     [(Some a) (Some (f a))])) ;; Call f on a and wrap result in Some.
 
-(maybe-do fun (maybe-divide 42 23))
-(maybe-do fun (maybe-divide 42 0))
+(maybe-map fun (maybe-divide 42 23))
+(maybe-map fun (maybe-divide 42 0))
 
 ;; maybe-do is a higher-order function. It accepts as parameter
 ;; another function, which it might execute. This is a very important
