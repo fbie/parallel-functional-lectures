@@ -414,19 +414,19 @@ double-and-add
 (define-type (BinaryTree A) (U (Leaf A) (Node A (BinaryTree A) (BinaryTree A))))
 (struct (A) Leaf ([a : A]))
 ;; The type variable name must be named exactly as many times as it
-;; occurrs in the definition.
+;; occurs in the definition.
 (struct (A A A) Node ([a : A] [lhs : (BinaryTree A)] [rhs : (BinaryTree A)]))
 
 ;; 1) Write a function Size that returns the number of elements in a
-;; binary tree instance. Explain, in English, what your function does
-;; in each step.
+;; binary tree instance. You should only count leaves, not
+;; nodes. Explain, in English, what your function does in each step.
 
 (: Size (All (A) (-> (BinaryTree A) Integer)))
 (define (Size ba)
   ;; NOT to be handed out.
   (match ba
     [(Leaf _) 1]
-    [(Node _ lhs rhs) (+ 1 (Size lhs) (Size rhs))]))
+    [(Node _ lhs rhs) (+ (Size lhs) (Size rhs))]))
 
 ;; 2) Write a function Invert that swaps the left-hand side and the
 ;; right-hand side of a binary tree instance. Explain, in English,
@@ -434,16 +434,19 @@ double-and-add
 
 (: Invert (All (A) (-> (BinaryTree A) (BinaryTree A))))
 (define (Invert ba)
+  ;; NOT to be handed out.
   (match ba
     [(Leaf _) ba]
     [(Node a lhs rhs) (Node a (Invert rhs) (Invert lhs))]))
 
 ;; 3) Write a function MapTree that maps a function f to all elements
-;; of some binary tree instance. Explain, in English, what your
-;; function does in each step.
+;; of some binary tree instance and return a new tree that consists of
+;; the results of f. Explain, in English, what your function does in
+;; each step.
 
 (: MapTree (All (A B) (-> (-> A B) (BinaryTree A) (BinaryTree B))))
 (define (MapTree f ba)
+  ;; NOT to be handed out.
   (match ba
     [(Leaf a) (Leaf (f a))]
     [(Node a lhs rhs) (Node (f a) (MapTree f lhs) (MapTree f rhs))]))
