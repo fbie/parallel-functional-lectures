@@ -2,68 +2,61 @@
 
 public class Examples {
 
-  public static class Maybe<A> {
+  // A Java approximation of the Maybe type.
+  public static abstract class Maybe<A> {}
+
+  public static class None<A> extends Maybe<A> {
+
+    public None() {}
+
+  }
+
+  public static class Some<A> extends Maybe<A> {
+
     public final A a;
 
-    private Maybe(A a) {
+    public Some(A a) {
       this.a = a;
-    }
-
-    public static Maybe<A> None() {
-      return new Maybe(null);
-    }
-
-    public static Maybe<A> Some(A a) {
-      return new Maybe(a);
-    }
-
-    public boolean hasValue() {
-      return a != null;
     }
   }
 
-  public static class LinkedList<A> {
+  // A Java approximation of the linked list type.
+  public static abstract class LinkedList<A> {}
+
+  public static class Nil<A> extends LinkedList<A> {
+
+    public Nil() {}
+
+  }
+
+  public static class Cons<A> extends LinkedList<A> {
+
     public final A a;
     public final LinkedList<A> tail;
 
-    private LinkedList(A a, LinkedList<A> tail) {
+    public Cons(A a, LinkedList<A> tail) {
       this.a = a;
       this.tail = tail;
     }
+  }
 
-    public static LinkedList<A> Nil() {
-      return new LinkedList<A>(null, null);
-    }
+  // An approximation of the binary tree type.
+  public static abstract class BinaryTree<A> {}
 
-    public static LinkedList<A> Cons(A a, LinkedList<A> tail) {
-      return new LinkedList<A>(a, tail);
-    }
+  public static class Leaf<A> extends BinaryTree<A> {
+    public final A a;
 
-    public boolean isNil() {
-      return tail == null;
+    public Leaf(A a) {
+      this.a = a;
     }
   }
 
-  public static class BinaryTree<A> {
-    public final A a;
+  public static class Node<A> extends BinaryTree<A> {
     public final BinaryTree<A> left, right;
 
-    private BinaryTree(A a, BinaryTree<A> left, BinaryTree<A> right) {
-      this.a = a;
+    public Node(BinaryTree<A> left, BinaryTree<A> right) {
       this.left = left;
       this.right = right;
-    }
-
-    public static BinaryTree<A> Leaf(A a) {
-      return new BinaryTree<A>(a, null, null);
-    }
-
-    public static BinaryTree<A> Node(A a, BinaryTree<A> left, BinaryTree<A> right) {
-      return new BinaryTree<A>(a, left, right);
-    }
-
-    public boolean isLeaf() {
-      return left == null && right == null;
     }
   }
 }

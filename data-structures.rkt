@@ -108,24 +108,21 @@ double-and-add
 
 ;; Q: What is this type good for?
 
-;; A Java equivalent of our Maybe type:
+;; A Java approximation of our Maybe type:
+
+;; public static abstract class Maybe<A> {}
 ;;
-;; public class Maybe<A> {
-;;   public final A a; // Can never change.
-;
-;;   private Maybe(A a) {
-;;     this.a = a;
-;;   }
-;;
-;;   public static Maybe None() {
-;;     return new Maybe(null);
-;;   }
-;;
-;;   public static Maybe Some(A a) {
-;;     return new Maybe(a);
-;;   }
+;; public static class None<A> extends Maybe<A> {
+;;   public None() {}
 ;; }
 ;;
+;; public static class Some<A> extends Maybe<A> {
+;;   public final A a;
+;;   public Some(A a) {
+;;     this.a = a;
+;;   }
+;; }
+
 ;; In Java 8, this is called Optional<T>. The Maybe type is sometimes
 ;; also called option-type, optional or similar. Its constructors are
 ;; sometimes also called Nil instead of None of Just instead of
@@ -173,32 +170,31 @@ double-and-add
 ;; Q: What would the Java equivalent of LinkedList look like?
 
 ;; A:
-;; public class LinkedList<A> {
+
+;; public abstract class LinkedList<A> {}
+;;
+;; public class Nil<A> extends LinkedList<A> {
+;;   public Nil() {}
+;; }
+;;
+;; public class Cons<A> extends LinkedList<A> {
 ;;   public final A a;
 ;;   public final LinkedList<A> tail;
-;;
-;;   private LinkedList(A a, LinkedList<A> tail) {
+;;   public Cons(A a, LinkedList<A> tail) {
 ;;     this.a = a;
 ;;     this.tail = tail;
 ;;   }
-;;
-;;   public static LinkedList Nil() {
-;;     return new LinkedList(null, null);
-;;   }
-;;
-;;   public static LinkedList Cons(A a, LinkedList<A> as) {
-;;     return new LinkedList (a, as);
-;;   }
 ;; }
-;;
+
+
 ;; Now, we can put values in our new list.
 
 (ann (Cons 3 (Nil)) (LinkedList Integer))
 (ann (Cons 5 (Cons 3 (Nil))) (LinkedList Integer))
-;(ann (Cons "what" (Cons 5 (Cons 3 (Nil)))) (LinkedList Integer))
+;; (ann (Cons "what" (Cons 5 (Cons 3 (Nil)))) (LinkedList Integer)) ;; Types don't match!
 
 ;; We might want to know, how many elements are there in the list,
-;; just as in Java, where you can use arr.length.[
+;; just as in Java, where you can use arr.length.
 
 ;; In functional programming languages, state is immutable. Therefore,
 ;; we cannot use for-loops with counters as you know them from Java or
