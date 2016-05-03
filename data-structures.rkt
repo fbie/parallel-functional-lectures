@@ -61,6 +61,8 @@ add-one
 
 double-and-add
 
+;; From now on, we will explicitly annotate the type of each function.
+
 ;; In functional programming languages, state is immutable. If you
 ;; bind a value to a name via let, you are not allowed to change it
 ;; again. Therefore, we cannot use for-loops with counters as you know
