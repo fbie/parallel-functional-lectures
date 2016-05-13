@@ -18,12 +18,28 @@
 (struct (A) Leaf ([as : (Listof A)]) #:transparent)
 (struct (A) Cat ([l : (Ropeof A)] [r : (Ropeof A)]) #:transparent)
 
+;; The maximum length of a leaf list.
+(define N 5)
+
 ;; Return the number of elements in the rope.
 (: rope-length (All (A) (-> (Ropeof A) Integer)))
 (define (rope-length rope)
   (match rope
     [(Leaf as) (length as)]
     [(Cat l r) (+ (rope-length l) (rope-length r))]))
+
+;; Initialize a rope for a given function.
+(: rope-init (All (A) (-> Integer (-> Integer A) (Ropeof A))))
+(define (rope-init n f)
+  (: rope-init-internal (All (A) (-> Integer Integer (-> Integer A) (Ropeof A))))
+  (define (rope-init-internal offset n f)
+    (if (<= n N)
+        (Leaf (build-list n (lambda ([n : Integer]) (f (+ n offset)))))
+        (let* ([n0 (quotient n 2)]
+               [l (rope-init-internal offset n0 f)]
+               [r (rope-init-internal (+ offset (rope-length l)) (- n (rope-length l)) f)])
+          (Cat l r))))
+  (rope-init-internal 0 n f))
 
 ;; Return the value associated with some index i.
 (: rope-ref (All (A) (-> (Ropeof A) Integer A)))
