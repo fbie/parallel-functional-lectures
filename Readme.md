@@ -62,9 +62,17 @@ Please let me know which package you have chosen in advance, so that I can make 
 
 In lecture two, we introduced the Rope type, which is a binary tree with lists at its leaves. We have looked at how to parallelize a few functions, but there is more work to be done!
 
+We need parallel versions of ```rope-reduce``` and ```rope-map-reduce```. Implement parallel versions of both using futures and explain your implementations.
+
+Moreover, we want to be able to check whether a predicate (a function of type ```(All (A) (-> A Boolean))```) holds for all or for at least one element of the rope. These functions are called ```rope-for-all``` and ```rope-exists``` and are both of type ```(All (A) (-> (-> A Boolean) (Ropeof A) Boolean))```. Implement these as well. There are different ways to do so, explain your choice and implementation.
+
+As a bonus, you can try to implement ```rope-zip-with``` of type ```(All (A B C) (-> (-> A B C) (Ropeof A) (Ropeof B) (Ropeof C)))```, in sequential and in parallel. This is probably a bit more difficult.
+
+You are not required to perform proper benchmarking of the parallel code, because we have not covered that during the lecture. You are of course allowed to, if you want to. We would like to see however that you use the [Future Visualizer](The Racket Guide: Parallelism with Futures) to see how much parallelism you achieve. Document your results and include them in your hand-in.
 ## Useful Links ##
 
 - [The Racket Website](http://racket-lang.org/)
+- [The Racket Guide: Parallelism with Futures](https://docs.racket-lang.org/guide/parallelism.html)
 - [Documentation for Java 8 concurrency package ```java.util.concurrent```](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html)
 - [Documentation for Java 8 streams in  ```java.util.streams```](http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
 - [Documentation for Java 8 functional interfaces](http://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html)
