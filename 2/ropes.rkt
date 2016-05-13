@@ -29,9 +29,9 @@
 (define (rope-set rope i a)
   (match rope
     [(Leaf as) (Leaf (list-set as i a))]
-    [(Cat l r) (if (< i (rope-length l))
-                   (Cat (rope-set l i a) r)
-                   (Cat l (rope-set l (i - (rope-length l) a))))]))
+    [(Cat l r) (if (< i (rope-length l)) ;; If the index is inside the left rope,
+                   (Cat (rope-set l i a) r) ;; then set in left sub-rope.
+                   (Cat l (rope-set l (i - (rope-length l) a))))])) ;; Otherwise, set in right sub-rope.
 
 ;; Concatenate two ropes.
 (: rope-cat (All (A) (-> (Ropeof A) (Ropeof A) (Ropeof A))))
