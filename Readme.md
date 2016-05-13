@@ -68,7 +68,8 @@ Moreover, we want to be able to check whether a predicate (a function of type ``
 
 As a bonus, you can try to implement ```rope-zip-with``` of type ```(All (A B C) (-> (-> A B C) (Ropeof A) (Ropeof B) (Ropeof C)))```, in sequential and in parallel. This is probably a bit more difficult.
 
-You are not required to perform proper benchmarking of the parallel code, because we have not covered that during the lecture. You are of course allowed to, if you want to. We would like to see however that you use the [Future Visualizer](The Racket Guide: Parallelism with Futures) to see how much parallelism you achieve. Document your results and include them in your hand-in.
+You are not required to perform proper benchmarking of the parallel code, because we have not covered that during the lecture. You are of course allowed to, if you want to. We would like to see however that you use the [Future Visualizer](https://docs.racket-lang.org/guide/parallelism.html) to see how much parallelism you achieve. Document your results and include them in your hand-in.
+
 ## Useful Links ##
 
 - [The Racket Website](http://racket-lang.org/)
