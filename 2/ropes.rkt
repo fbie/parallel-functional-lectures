@@ -19,7 +19,7 @@
 (struct (A) Cat ([l : (Ropeof A)] [r : (Ropeof A)]) #:transparent)
 
 ;; The maximum length of a leaf list.
-(define N 5)
+(define max-leaf-length 5)
 
 ;; Return the number of elements in the rope.
 (: rope-length (All (A) (-> (Ropeof A) Integer)))
@@ -33,7 +33,7 @@
 (define (rope-init n f)
   (: rope-init-internal (All (A) (-> Integer Integer (-> Integer A) (Ropeof A))))
   (define (rope-init-internal offset n f)
-    (if (<= n N)
+    (if (<= n max-leaf-length)
         (Leaf (build-list n (lambda ([n : Integer]) (f (+ n offset)))))
         (let* ([n0 (quotient n 2)]
                [l (rope-init-internal offset n0 f)]
