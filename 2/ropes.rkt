@@ -48,7 +48,7 @@
     [(Leaf as) (list-ref as i)]
     [(Cat l r) (if (< i (rope-length l))
                     (rope-ref l i)
-                    (rope-ref r i))]))
+                    (rope-ref r (- i (rope-length l))))]))
 
 ;; Return a new rope where the value at index i has been replaced by
 ;; some new value a.
