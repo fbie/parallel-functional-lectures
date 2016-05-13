@@ -2,6 +2,17 @@
 
 (require racket/list)
 
+;; Apparently, typed/racket does not provide a persistent list-set as
+;; a library function.
+(: list-set (All (A) (-> (Listof A) Integer A (Listof A))))
+(define (list-set as i a)
+  (match as
+    ['() as]
+    [(cons a' as) (if (= i 0)
+                      (cons a as)
+                      (cons a' (list-set as (- i 1) a)))]))
+
+;; This is our rope type.
 (define-type (Ropeof A) (U (Leaf A) (Cat A)))
 
 (struct (A) Leaf ([as : (Listof A)]) #:transparent)
