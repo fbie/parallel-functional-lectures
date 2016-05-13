@@ -1,7 +1,5 @@
 #lang typed/racket
 
-(require racket/list)
-
 ;; Apparently, typed/racket does not provide a persistent list-set as
 ;; a library function.
 (: list-set (All (A) (-> (Listof A) Integer A (Listof A))))
