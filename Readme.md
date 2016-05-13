@@ -62,7 +62,7 @@ Please let me know which package you have chosen in advance, so that I can make 
 
 In lecture two, we introduced the Rope type, which is a binary tree with lists at its leaves. We have looked at how to parallelize a few functions, but there is more work to be done!
 
-We need parallel versions of ```rope-reduce``` and ```rope-map-reduce```. Implement parallel versions of both using futures and explain your implementations.
+We need parallel versions of ```rope-reduce```, ```rope-map-reduce``` and ```rope-reverse```. Implement parallel versions of both using futures and explain your implementations. Is is possible to parallelize ```rope-fold```? Explain!
 
 Moreover, we want to be able to check whether a predicate (a function of type ```(All (A) (-> A Boolean))```) holds for all or for at least one element of the rope. These functions are called ```rope-for-all``` and ```rope-exists``` and are both of type ```(All (A) (-> (-> A Boolean) (Ropeof A) Boolean))```. Implement these as well. There are different ways to do so, explain your choice and implementation.
 
