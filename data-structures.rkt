@@ -33,7 +33,7 @@
 
 add-one
 
-;; Typed Racket has (limited) type-inferrence capabilities. This means
+;; Typed Racket has (limited) type-inference capabilities. This means
 ;; that you do not need to annotate a function with all types, because
 ;; the compiler can infer the types of the parameters based on how you
 ;; use them. For instance, if you write x + 3.14, then x must be a
