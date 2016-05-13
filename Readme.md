@@ -50,12 +50,15 @@ TBA
 
 ## Projects ##
 
-We have a number of practical projects to choose from.
+We have a number of practical projects to choose from. You should choose one project in groups of 2 - 3 students, not more and not less.
 
 ### Typing an Untyped Racket Library ###
 
-TBA
+Your task is to chose an untyped library from [the Racket Package Repository](https://pkgs.racket-lang.org/) and to provide the types for it. You should annotate the package's source code with the correct types and the Typed Racket type checker should be able to check the program.
+
+Please let me know which package you have chosen in advance, so that I can make sure that the package is not too large for you to type over the course of the project. Use the [DrRacket IDE](http://racket-lang.org/) to edit the source files and to type check the code.
 
 ### Parallel Immutable Functional Data Structures ####
 
-In lecture two, we introduced the Rope type, which is a binary tree with lists at its leaves. We have loo
+In lecture two, we introduced the Rope type, which is a binary tree with lists at its leaves. We have looked at how to parallelize a few functions, but there is more work to be done!
+
