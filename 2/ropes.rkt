@@ -70,6 +70,13 @@
   ;; TODO: Implement!
   rope)
 
+;; Reverse the order of elements in the rope.
+(: rope-reverse (All (A) (-> (Ropeof A) (Ropeof A))))
+(define (rope-reverse rope)
+  (match rope
+    [(Leaf as) (Leaf (reverse as))]
+    [(Cat l r) (Cat (rope-reverse r) (rope-reverse l))]))
+
 ;; Apply a function to each element of a rope and return a rope with
 ;; the resulting values at the corresponding positions.
 (: rope-map (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
@@ -77,3 +84,19 @@
   (match rope
     [(Leaf as) (Leaf (map f as))]
     [(Cat l r) (Cat (rope-map f l) (rope-map f r))]))
+
+;; Fold the rope using the function f.
+(: rope-fold (All (A B) (-> (-> A B B) B (Ropeof A) B)))
+(define (rope-fold f state rope)
+  (match rope
+    [(Leaf as) (foldl f state as)]
+    [(Cat l r) (let* ([state1 (rope-fold f state  l)]  ;; First fold left part.
+                      [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
+                 state2)])) ;; Right part is the result, we move from left to right.
+
+;; Reduce the rope using function f.
+(: rope-reduce (All (A) (-> (-> A A A) A (Ropeof A) A)))
+(define (rope-reduce f state rope)
+  (match rope
+    [(Leaf as) (foldl f state as)]
+    [(Cat l r) (f (rope-reduce f state l) (rope-reduce f state r))])) ;; Because f is (-> A A A)!
