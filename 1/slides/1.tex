@@ -8,6 +8,7 @@
 \usepackage{booktabs}
 \usepackage{color}
 \usepackage{colortbl}
+\usepackage{dirtytalk}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -169,10 +170,52 @@ What does this program do?
 Several new things on this slide:
 
 \begin{itemize}
-\item Functions need no return statement. Their return value is the last executed statement!
-\item Type annotations start with \lstinline{:} and describe the type of a symbol.
-\item The type of \lstinline{times-two} is $Number \, \rightarrow \, Number$.
+\pause{} \item Functions need no return statement. Their return value is the last executed statement!
+\pause{} \item Type annotations start with \lstinline{:} and describe the type of a symbol.
+\pause{} \item The type of \lstinline{times-two} is $Number \, \rightarrow \, Number$.
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Types in Typed Racket}
+We write the function type $A \, \rightarrow \, B$ as:
+
+\begin{center}
+  \lstinline{(-> A B)}
+\end{center}
+
+where \lstinline{A} is the parameter type and \lstinline{B} is the return type.
+
+\vspace{1.5cm}
+
+\pause{}
+
+\begin{center}
+  \lstinline{(-> A B C)}
+\end{center}
+
+Which types are parameter types, which ones are return types?
+\end{frame}
+
+\begin{frame}[fragile]{Polymorphic Types}
+Polymorphic types in Typed Racket are very explicit:
+
+\begin{lstlisting}
+(: twice (All (A) (-> A (Pairof A A))))
+(define (twice a)
+  (pair a a))
+\end{lstlisting}
+
+\pause{}
+
+\vspace{0.5cm}
+
+\say{For all types \lstinline{A}, the type of \lstinline{twice} is such that iff you pass it a value of some type \lstinline{A} it will return a pair of values of type \lstinline{A}.}
+
+\vspace{1.5cm}
+
+\pause{}
+
+We will use polymorphic types a lot!
 \end{frame}
 
 \end{document}
