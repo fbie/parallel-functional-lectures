@@ -79,7 +79,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Hello World in Typed Racket}
+\begin{frame}[fragile]{Hello World in Typed Racket}
 \begin{center}
 \begin{lstlisting}
 ;; Tell run-time which language to use.
@@ -91,7 +91,7 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[containsverbatim]{A More Interesting Program}
+\begin{frame}[fragile]{A More Interesting Program}
 \begin{center}
 \begin{lstlisting}
 #lang typed/racket
@@ -102,13 +102,15 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Do You Think This Looks Strange?}
+\begin{frame}[fragile]{Do You Think This Looks Strange?}
 
   In Racket, all expressions are written like this:
 
   \begin{center}
     \lstinline{(function arg1 arg2 ... argN)}
   \end{center}
+
+  \pause{}
 
   Operators are also just functions:
 
@@ -120,9 +122,20 @@
       \lstinline{(f x y)} & $\Rightarrow$ & $f(x, \, y)$
     \end{tabular}
   \end{center}
+
+  \pause{}
+
+  Some functions are \textit{variadic}:
+
+  \begin{center}
+    \begin{tabular}{ccc}
+      \lstinline{(+ x y z)} & $\Rightarrow$ & $x + y + z$
+    \end{tabular}
+  \end{center}
+
 \end{frame}
 
-\begin{frame}[containsverbatim]{Local Bindings}
+\begin{frame}[fragile]{Local Bindings}
 
 Just like local variables in Java, but you can never change them!
 
@@ -142,7 +155,7 @@ What does this program do?
 
 \end{frame}
 
-\begin{frame}[containsverbatim]{A First Function}
+\begin{frame}[fragile]{A First Function}
 \begin{lstlisting}
 #lang typed/racket
 
@@ -150,6 +163,8 @@ What does this program do?
 (define (times-two x)
   (* 2 x))
 \end{lstlisting}
+
+\pause{}
 
 Several new things on this slide:
 
