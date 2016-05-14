@@ -100,3 +100,12 @@
   (match rope
     [(Leaf as) (foldl f state as)]
     [(Cat l r) (f (rope-reduce f state l) (rope-reduce f state r))])) ;; Because f is (-> A A A)!
+
+;; The same as rope-map but runs in parallel!
+(: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
+(define (rope-pmap f rope)
+  (match rope
+    [(Leaf as) (Leaf (map f as))]
+    [(Cat l r) (let [(l0 (future (lambda () (rope-pmap f l))))  ;; Start a future for the left part.
+                     (r0 (future (lambda () (rope-pmap f r))))] ;; Start a future for the right part.
+                 (Cat (touch l0) (touch r0)))])) ;; Touch waits for the futures and returns their results.
