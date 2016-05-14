@@ -18,6 +18,11 @@
 \usepackage{tikz}
 \usepackage{todonotes}
 
+\hypersetup{
+  colorlinks=true,
+  urlcolor=cyan
+}
+
 \lstset{
   language=Lisp,
   basicstyle=\ttfamily,
@@ -233,7 +238,23 @@ We can also use type polymorphism here:
 \begin{lstlisting}
 (struct (A) (myPolyBox [value : A]))
 \end{lstlisting}
+\end{frame}
 
+\begin{frame}{That Was a Quick Intro}
+  Next, we will do a live coding session!
+
+  \begin{itemize}
+  \pause{} \item I code on the big screen and show you how to do functional programming in Racket.
+  \pause{} \item You help with ideas and suggestions and experiment yourselves!
+  \pause{} \item All code we write will be available on
+  \begin{itemize}
+  \item \url{github.com/fbie/parallel-functional-programming}
+  \end{itemize}
+  \pause{} \item You can download Racket from
+  \begin{itemize}
+  \item \url{racket-lang.org}
+  \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \end{document}
