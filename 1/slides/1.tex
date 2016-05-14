@@ -211,11 +211,29 @@ Polymorphic types in Typed Racket are very explicit:
 
 \say{For all types \lstinline{A}, the type of \lstinline{twice} is such that iff you pass it a value of some type \lstinline{A} it will return a pair of values of type \lstinline{A}.}
 
-\vspace{1.5cm}
+\vspace{1cm}
 
 \pause{}
 
-We will use polymorphic types a lot!
+It's just like generic types in Java!
+\end{frame}
+
+\begin{frame}[fragile]{Structs in Typed Racket}
+Structs are containers for values.
+
+\begin{lstlisting}
+(struct (myNumberBox [value : Number]))
+(struct (myStringBox [value : String]))
+\end{lstlisting}
+
+\pause{}
+
+We can also use type polymorphism here:
+
+\begin{lstlisting}
+(struct (A) (myPolyBox [value : A]))
+\end{lstlisting}
+
 \end{frame}
 
 \end{document}
