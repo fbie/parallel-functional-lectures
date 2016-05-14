@@ -50,18 +50,13 @@ add-one
 ;; The type of the function can be written like this, above the
 ;; "define" line. -> means function, the last type in the list is the
 ;; return type, the others are parameter types.
-(define (double-and-add [x : Integer] [y : Integer])
-  (let ([x2 (* 2 x)]               ;; Compute 2 * x and bind it to x2.
-        [y2 (* 2 y)])              ;; Compute 2 * y and bind it to y2.
-    (+ x2 y2)))                    ;; Add the two results.
+(: double-and-add (-> Integer Integer Integer))
+(define (double-and-add x y)
+  (let ([x2 (* 2 x)]  ;; Compute 2 * x and bind it to x2.
+        [y2 (* 2 y)]) ;; Compute 2 * y and bind it to y2.
+    (+ x2 y2)))       ;; Add the two results.
 
 (double-and-add 42 23)
-
-;; Q: What type does double-and-add have?
-
-double-and-add
-
-;; From now on, we will explicitly annotate the type of each function.
 
 ;; In functional programming languages, state is immutable. If you
 ;; bind a value to a name via let, you are not allowed to change it
