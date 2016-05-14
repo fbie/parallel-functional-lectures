@@ -110,14 +110,23 @@
 (: rope-reduce (All (A) (-> (-> A A A) (Ropeof A) A)))
 (define (rope-reduce f rope)
   (match rope
-    [(Leaf as) (reduce f as)]
-    [(Cat l r) (f (rope-reduce f l) (rope-reduce f r))])) ;; Because f is (-> A A A)!
+    [(Leaf as) (reduce f as)] ;; Base case, reduce the leaf list to a single value.
+    [(Cat l r) (f (rope-reduce f l) (rope-reduce f r))])) ;; Reduce left and right part and merge results.
 
 ;; The same as rope-map but runs in parallel!
 (: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
 (define (rope-pmap f rope)
   (match rope
-    [(Leaf as) (Leaf (map f as))]
+    [(Leaf as) (Leaf (map f as))] ;; Base case, map over the leaf list.
     [(Cat l r) (let [(l0 (future (lambda () (rope-pmap f l))))  ;; Start a future for the left part.
                      (r0 (future (lambda () (rope-pmap f r))))] ;; Start a future for the right part.
                  (Cat (touch l0) (touch r0)))])) ;; Touch waits for the futures and returns their results.
+
+;; The same as rope-reduce but runs in parallel!
+(: rope-preduce (All (A) (-> (-> A A A) (Ropeof A) A)))
+(define (rope-preduce f state rope)
+  (match rope
+    [(Leaf as) (reduce f as)] ;; Base case, reduce the leaf list.
+    [(Cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))  ;; Start a future for the left part.
+                     (r0 (future (lambda () (rope-preduce f r))))] ;; Start a future for the right part.
+                 (f (touch l0) (touch r0)))])) ;; Await futures and merge the results using f.
