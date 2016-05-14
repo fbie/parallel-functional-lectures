@@ -26,7 +26,7 @@
 \lstset{
   language=Lisp,
   basicstyle=\ttfamily,
-  otherkeywords={\#lang,define,match,let,:,->},
+  otherkeywords={\#lang,define,match,let,:,->,lambda,struct,define-type},
   identifierstyle=\color{pink!60!blue},
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
@@ -253,6 +253,25 @@ Now, we can call it like any other function:
 > (two-three-sum 20 20)
 100
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Anonymous Functions}
+You can define functions without giving them a name. Such functions are called \textit{lambda expressions}:
+
+\begin{lstlisting}
+> ((lambda (x) x) 2)
+2
+\end{lstlisting}
+
+\pause{}
+
+Here, we have defined a lambda expression and applied it to the value \lstinline{2}. We call this function  the \textit{identity function}.
+
+\pause{}
+
+\vspace{1cm}
+
+We will often come across lambda expressions in functional programming!
 \end{frame}
 
 \begin{frame}[fragile]{Structs in Typed Racket}
