@@ -1,0 +1,163 @@
+\documentclass{beamer}
+\usepackage{beamerthemeOerestad}
+\usetheme{Oerestad}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{url}
+\usepackage{semantic}
+\usepackage{tikz}
+\usepackage{todonotes}
+
+\lstset{
+  language=Lisp,
+  basicstyle=\ttfamily,
+  otherkeywords={define,match,let,:,->},
+  identifierstyle=\color{pink!60!blue},
+  keywordstyle=\color{blue!50!black},
+  stringstyle=\color{green!50!black},
+  commentstyle=\color{pink!60!black}
+}
+
+\title{Functional Programming in Typed Racket}
+\author{Florian BIERMANN \\\small{\texttt{fbie@itu.dk}} \\~}
+
+\institute{IT University of Copenhagen \& UCAS}
+
+\date{2016-05-26}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage{}
+\end{frame}
+
+\begin{frame}{Who am I?}
+  Just call me Florian!
+
+  \begin{itemize}
+  \pause{} \item I am from Germany and live in Denmark.
+  \pause{} \item Second year PhD student at IT University of Copenhagen and UCAS.
+  \pause{} \item My Chinese is really bad (but I am trying to learn!)
+  \pause{} \item If you do not understand what I say or if I speak too fast, \textbf{please tell me right away!}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why Functional Programming?}
+
+  Functional programming is old but recently it has become very popular!
+
+  \begin{itemize}
+  \pause{} \item Makes it easier to think about what a program does.
+  \pause{} \item Good for parallel programming, performance (see next lecture).
+  \pause{} \item Used in financial industry, modern compilers and more.
+  \pause{} \item Jobs in functional programming pay better!
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Typed Racket}
+
+  \begin{center}
+    \includegraphics[width=0.2\textwidth]{racket.png}
+  \end{center}
+
+  \textbf{Racket} and its sister-language \textbf{Typed Racket} are Scheme-dialects.
+
+  \begin{itemize}
+  \pause{} \item As the names say, Racket is untyped, Typed Racket has types.
+  \pause{} \item Functional language but with support for objects.
+  \pause{} \item Great meta-programming (we won't look at that).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Hello World in Typed Racket}
+\begin{center}
+\begin{lstlisting}
+;; Tell run-time which language to use.
+#lang typed/racket
+
+;; Now print something.
+(print "Nihao!")
+\end{lstlisting}
+\end{center}
+\end{frame}
+
+\begin{frame}[containsverbatim]{A More Interesting Program}
+\begin{center}
+\begin{lstlisting}
+#lang typed/racket
+
+;; Define x as the result of the computation.
+(define x (* (+ 2 4) (+ 42 9)))
+\end{lstlisting}
+\end{center}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Do You Think This Looks Strange?}
+
+  In Racket, all expressions are written like this:
+
+  \begin{center}
+    \lstinline{(function arg1 arg2 ... argN)}
+  \end{center}
+
+  Operators are also just functions:
+
+  \begin{center}
+    \begin{tabular}{ccc}
+      \lstinline{(+ x y)} & $\Rightarrow$ & $x + y$ \\
+      \lstinline{(> x y)} & $\Rightarrow$ & $x > y$ \\
+      \lstinline{(/ x y)} & $\Rightarrow$ & $\frac{x}{y}$ \\
+      \lstinline{(f x y)} & $\Rightarrow$ & $f(x, \, y)$
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Local Bindings}
+
+Just like local variables in Java, but you can never change them!
+
+\begin{lstlisting}
+#lang typed/racket
+
+(let ([x (* 2 16)]
+      [y (* 3 17)])
+    (+ x y))
+\end{lstlisting}
+
+What does this program do?
+
+~\\
+
+\textit{Note:} You cannot reference \lstinline{x} and \lstinline{y} after the last closing parenthesis of the \lstinline{let} expression!
+
+\end{frame}
+
+\begin{frame}[containsverbatim]{A First Function}
+\begin{lstlisting}
+#lang typed/racket
+
+(: times-two (-> Number Number))
+(define (times-two x)
+  (* 2 x))
+\end{lstlisting}
+
+Several new things on this slide:
+
+\begin{itemize}
+\item Functions need no return statement. Their return value is the last executed statement!
+\item Type annotations start with \lstinline{:} and describe the type of a symbol.
+\item The type of \lstinline{times-two} is $Number \, \rightarrow \, Number$.
+\end{itemize}
+\end{frame}
+
+\end{document}

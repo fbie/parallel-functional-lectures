@@ -1,0 +1,137 @@
+% ITU Copenhagen theme for beamer
+%
+% Changelog:
+%
+\ProvidesPackage{beamerthemeOerestad}[2011/12/07]
+
+\RequirePackage{tikz}
+\RequirePackage{varwidth}
+\RequirePackage[overload]{textcase}
+\RequirePackage{helvet}
+
+\def\OerestadVersion{0.1}
+
+
+\definecolor{beamer@structure@color}{named}{black}
+
+% colours and fonts
+%\usecolortheme{KUhorse}
+%\usefonttheme{KU}
+
+\pgfdeclareimage[height=1.2cm]{logo}{bigitu} 
+
+\defbeamertemplate*{footline}{infolines theme}
+{
+  \leavevmode%
+  \includegraphics[height=0.6cm]{ITUboxhorisontal}\hfill\insertframenumber\phantom{XX}%
+  \vskip1em%
+}
+
+\defbeamertemplate*{headline}{infolines theme}
+{
+%\fbox{
+%\usebeamerfont{title}\insertframetitle\par%
+%}
+}
+
+\setbeamercolor*{palette primary}{use=structure,fg=black,bg=black}
+\setbeamercolor*{palette secondary}{use=structure,fg=black,bg=black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=black,bg=black}
+\setbeamercolor*{frametitle}{use=structure,fg=white,bg=black}
+\setbeamercolor*{author}{use=structure,fg=black,bg=white}
+
+
+\setbeamercolor{title}{fg=black!80!white,bg=white!20!white}
+
+% Blocks
+\setbeamercolor{structure}{fg=black}
+\setbeamerfont{structure}{shape=\scshape}
+\setbeamertemplate{block begin}{
+  \begin{beamercolorbox}{block title}%
+    \usebeamerfont*{block title}\insertblocktitle%
+  \end{beamercolorbox}%
+  \begingroup
+  \vskip.25em
+  \leftskip1em
+  \rightskip\leftskip
+}
+\setbeamertemplate{block end}{
+  \endgroup\vfill
+}
+
+% Title page
+\defbeamertemplate*{title page}{customized}[1][]
+{
+  \thispagestyle{empty}
+  \vspace{3em}
+  \begin{beamercolorbox}[sep=0.5cm]{title}
+  \begin{centering}
+  \usebeamerfont{title}\inserttitle\par
+  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+  \end{centering}
+  \end{beamercolorbox}
+  \bigskip
+  \vspace{1cm}
+  \begin{beamercolorbox}[sep=0pt]{author}
+  \begin{centering}
+  \usebeamerfont{author}\insertauthor\par
+  \usebeamerfont{institute}\insertinstitute\par
+  \bigskip
+  \usebeamerfont{date}\insertdate\par
+%  \vspace{3cm}
+  \end{centering}
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw (current page.south east) node[yshift=3ex, xshift=-0.17\textwidth] {
+      \includegraphics[width=0.3\textwidth]{ITUlogoukorange}
+    };
+  \end{tikzpicture}
+
+
+  \end{beamercolorbox}
+}
+
+% Comment this if you want navigation symbols.
+\defbeamertemplate*{navigation symbols}{customized}
+{%
+}
+
+
+\defbeamertemplate*{frametitle}{customized}[1][left]
+{
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%
+  \advance\@tempdima by\beamer@leftmargin%
+  \advance\@tempdima by\beamer@rightmargin%
+  \begin{beamercolorbox}[sep=0.3cm,#1,wd=1.5\textwidth]{frametitle}
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1ex%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
+      \fi
+    }%
+    \vskip-1ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+}
+
+
+%%%% FONT THEME %%%%%%%
+
+\setbeamerfont{frametitle}{family=\sffamily,shape=\upshape,size=\Large}
+\setbeamerfont{framesubtitle}{size=\large,parent={frametitle}}
+\setbeamerfont{title}{size=\LARGE,series=\bfseries,parent={frametitle}}
+\setbeamerfont{subtitle}{size=,parent={framesubtitle}}
+
+
+%\setbeamertemplate{itemize item}{\vspace{15mm}%
+% \textbullet}
+
+
+\ProcessOptionsBeamer
+
+\mode
+<all>
