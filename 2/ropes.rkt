@@ -3,12 +3,13 @@
 ;; Apparently, typed/racket does not provide a persistent list-set as
 ;; a library function.
 (: list-set (All (A) (-> (Listof A) Integer A (Listof A))))
-(define (list-set as i a)
+(define (list-set as i b)
   (match as
     ['() as]
-    [(cons a' as) (if (= i 0)
-                      (cons a as)
-                      (cons a' (list-set as (- i 1) a)))]))
+    [(cons a as) (if (= i 0)
+                     (cons b as)
+                     (cons a (list-set as (- i 1) b)))]))
+
 
 ;; This is our rope type.
 (define-type (Ropeof A) (U (Leaf A) (Cat A)))
