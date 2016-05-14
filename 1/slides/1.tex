@@ -317,4 +317,59 @@ We can also use type polymorphism here:
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Java Equivalent to Maybe}
+\begin{lstlisting}[style=Java]
+public abstract class Maybe<A> {}
+
+public class None<A> extends Maybe<A> {
+  public None() {}
+}
+public class Some<A> extends Maybe<A> {
+  public final A a;
+  public Some(A a) {
+    this.a = a;
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Java Equivalent to Cons List}
+\begin{lstlisting}[style=Java]
+public abstract class LinkedList<A> {}
+
+public class Nil<A> extends LinkedList<A> {
+  public Nil() {}
+}
+public class Cons<A> extends LinkedList<A> {
+  public final A a;
+  public final LinkedList<A> tail;
+
+  public Cons(A a, LinkedList<A> tail) {
+    this.a = a;
+    this.tail = tail;
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Java Equivalent to Binary Tree}
+\begin{lstlisting}[style=Java]
+public abstract class BinaryTree<A> {}
+
+public class Leaf<A> extends BinaryTree<A> {
+  public final A a;
+  public Leaf(A a) {
+    this.a = a;
+  }
+}
+public class Node<A> extends BinaryTree<A> {
+  public final BinaryTree<A> left, right;
+  public Node(BinaryTree<A> left,
+              BinaryTree<A> right) {
+    this.left = left; this.right = right;
+  }
+}
+\end{lstlisting}
+\end{frame}
+
 \end{document}
