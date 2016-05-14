@@ -12,7 +12,7 @@ We will not cover topics such as monads (even though we will look at the *Maybe*
 
 ### Reading Material ###
 
-TBA
+- [The Racket Guide: Types in Typed Racket](https://docs.racket-lang.org/ts-guide/types.html)
 
 ## Lecture 2: Parallel Computations on Immutable Data Structures ##
 
@@ -26,7 +26,8 @@ One such way is the *Rope* data structure. A rope is a binary tree with lists (o
 
 #### Reading Material ####
 
-TBA
+- [Michael Erdmann: **Parallelism, Cost Graphs, and Sequences**, lecture notes](http://www.cs.cmu.edu/~15150/resources/lectures/19/Parallelism.pdf)
+- [Hans-J. Boehm et al.: **Ropes: an Alternative to Strings**](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=02A88073F0332A35BA9A5EA132887B13?doi=10.1.1.14.9450&rep=rep1&type=pdf) (optional)
 
 ## Lecture 3 ##
 
@@ -73,6 +74,7 @@ You are not required to perform proper benchmarking of the parallel code, becaus
 ## Useful Links ##
 
 - [The Racket Website](http://racket-lang.org/)
+- [The Racket Guide: Types in Typed Racket](https://docs.racket-lang.org/ts-guide/types.html)
 - [The Racket Guide: Parallelism with Futures](https://docs.racket-lang.org/guide/parallelism.html)
 - [Documentation for Java 8 concurrency package ```java.util.concurrent```](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html)
 - [Documentation for Java 8 streams in  ```java.util.streams```](http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
