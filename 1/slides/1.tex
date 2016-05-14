@@ -23,7 +23,7 @@
   urlcolor=cyan
 }
 
-\lstset{
+\lstdefinestyle{Racket}{
   language=Lisp,
   basicstyle=\ttfamily,
   otherkeywords={\#lang,define,match,let,:,->,lambda,struct,define-type},
@@ -31,6 +31,15 @@
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
   commentstyle=\color{pink!60!black}
+}
+
+\lstdefinestyle{Java}{
+  language=Java,
+  basicstyle=\ttfamily
+}
+
+\lstset{
+  style=Racket
 }
 
 \title{Functional Programming in Typed Racket}
