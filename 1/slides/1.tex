@@ -98,14 +98,22 @@
 \end{frame}
 
 \begin{frame}[fragile]{A More Interesting Program}
-\begin{center}
 \begin{lstlisting}
 #lang typed/racket
 
 ;; Define x as the result of the computation.
 (define x (* (+ 2 4) (+ 42 9)))
 \end{lstlisting}
-\end{center}
+
+\pause{}
+
+We can check its value in the interactive mode:
+
+\begin{lstlisting}
+> x
+59
+\end{lstlisting}
+
 \end{frame}
 
 \begin{frame}[fragile]{Do You Think This Looks Strange?}
@@ -221,6 +229,30 @@ Polymorphic types in Typed Racket are very explicit:
 \pause{}
 
 It's just like generic types in Java!
+\end{frame}
+
+\begin{frame}[fragile]{Local Bindings, Revisited}
+
+Let's turn our local binding example into a function!
+
+\begin{lstlisting}
+(: two-three-sum (-> Number Number Number))
+(define (two-three-sum a b)
+  (let ([x (* 2 a)]
+        [y (* 3 b)])
+      (+ x y))
+\end{lstlisting}
+
+\pause{}
+
+Now, we can call it like any other function:
+
+\begin{lstlisting}
+> (two-three-sum 1 1)
+5
+> (two-three-sum 20 20)
+100
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Structs in Typed Racket}
