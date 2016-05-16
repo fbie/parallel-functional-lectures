@@ -29,6 +29,22 @@ One such way is the *Rope* data structure. A rope is a binary tree with lists (o
 - [Michael Erdmann: **Parallelism, Cost Graphs, and Sequences**, lecture notes](http://www.cs.cmu.edu/~15150/resources/lectures/19/Parallelism.pdf)
 - [Hans-J. Boehm et al.: **Ropes: an Alternative to Strings**](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=02A88073F0332A35BA9A5EA132887B13?doi=10.1.1.14.9450&rep=rep1&type=pdf) (optional)
 
+#### Installing Racket ####
+
+If you are on Ubuntu Linux, you can install Racket and DrRacket via the command line:
+
+```
+$ sudo apt-get install drracket
+```
+
+On MacOSX you can use brew:
+
+```
+$ brew install racket
+```
+
+On Windows, you will have to download the file from the web-site and install it manually.
+
 ## Lecture 3 ##
 
 #### Content ####
