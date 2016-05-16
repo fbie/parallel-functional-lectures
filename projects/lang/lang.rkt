@@ -1,6 +1,6 @@
 #lang typed/racket
 
-;; This is our Term type, which models the AST.
+;; This is our Term type, which models the abstract syntax tree.
 (define-type Term (U Var Abs App Closure))
 (struct Var ([s : String]) #:transparent) ;; A variable name.
 (struct Abs ([v : Var] [body : Term]) #:transparent) ;; A function. Functions are abstractions.
