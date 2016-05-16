@@ -92,6 +92,6 @@ You are not required to perform proper benchmarking of the parallel code, becaus
 - [The Racket Website](http://racket-lang.org/)
 - [The Racket Guide: Types in Typed Racket](https://docs.racket-lang.org/ts-guide/types.html)
 - [The Racket Guide: Parallelism with Futures](https://docs.racket-lang.org/guide/parallelism.html)
-- [Documentation for Java 8 concurrency package ```java.util.concurrent```](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html)
-- [Documentation for Java 8 streams in  ```java.util.streams```](http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
+- [Documentation for Java 8  ```java.util.concurrent```](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html)
+- [Documentation for Java 8 ```java.util.streams```](http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
 - [Documentation for Java 8 functional interfaces](http://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html)
