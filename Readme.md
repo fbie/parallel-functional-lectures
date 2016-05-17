@@ -118,7 +118,7 @@ Your task in this project is to extend the ```eval``` and ```parse``` functions 
 
 If ```b``` evaluates to true, execute ```e1```, otherwise execute ```e2```.
 
-5. What would it take to add lambda expressions and application to the language? Can you implement it? Give it a try! All lambdas should only be of type ```(-> Number Number)```.
+5. What would it take to add lambda expressions and application to the language? Can you implement it? Give it a try! It would be nice if you could bind lambdas to names using ```let```.  All lambdas should only be of type ```(-> Number Number)```.
 
 Some text expressions:
 
