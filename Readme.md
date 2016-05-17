@@ -78,7 +78,7 @@ Please let me know which package you have chosen in advance, so that I can make 
 
 ### Parallel Immutable Functional Data Structures ####
 
-In lecture two, we introduced the Rope type, which is a binary tree with lists at its leaves. We have looked at how to parallelize a few functions, but there is more work to be done!
+In lecture two, we introduced the Rope type, which is a binary tree with lists at its leaves. We have looked at how to parallelize a few functions, but there is more work to be done! You can find the source code [here](https://raw.githubusercontent.com/fbie/parallel-functional-lectures/master/2/ropes.rkt).
 
 You are required to implement parallel versions of the following functions:
 
@@ -99,10 +99,9 @@ The most difficult task is to implement a function called ```rope-scan```. Somet
 (list-scan list-append '() '('(1) '(2) '(3) '(4))) -> '('() '(1) '(1 2) '(1 2 3) '(1 2 3 4))
 ```
 
-First, implement this function sequentially, without any futures. Then, read this paper on parallelizing prefix-sums computations: [Guy Blelloch: Prefix sums and their applications ](http://repository.cmu.edu/cgi/viewcontent.cgi?article=3017&context=compsci) (sections 1 and 2 only).
+First, implement this function sequentially, without any futures. Then, read this paper on parallelizing prefix-sums computations: [Guy Blelloch: Prefix sums and their applications ](http://repository.cmu.edu/cgi/viewcontent.cgi?article=3017&context=compsci) (sections 1 and 2 only). Try to see whether you can apply what you have learned from reading sections 1 and 2 to parallelize your implementation of ```rope-scan```.
 
-
-You are not required to perform proper benchmarking of the parallel code, because we have not covered that during the lecture. You are of course allowed to, if you want to. We would like to see however that you use the [Future Visualizer](https://docs.racket-lang.org/future-visualizer/index.html) to see how much parallelism you achieve. Document your results and include them in your hand-in.
+You are not required to perform proper benchmarking of the parallel code. You are of course allowed to, if you want to, but it is not a requirement. We would like to see however that you use the [Future Visualizer](https://docs.racket-lang.org/future-visualizer/index.html) to see how much parallelism you achieve. Document your results and include them in your hand-in.
 
 ### A Tiny Language Implementation ###
 
