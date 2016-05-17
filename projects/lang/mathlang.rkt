@@ -93,20 +93,20 @@
 ;; the language? Can you implement it? Give it a try! All lambdas
 ;; should only be of type (-> Number Number).
 ;;
-;; Some text expressions:
+;; Some test expressions:
 
 ;; 1)
-(eval (parse '(* 2 5)) '())
-(eval (parse '(let (x (* 2 5) (/ x x)))) '())
+;(eval (parse '(* 2 5)) '())
+;(eval (parse '(let (x (* 2 5) (/ x x)))) '())
 
 ;; 2)
-(eval (parse '(- 3)) '())
-(eval (parse '(let (x 4) (- x))) '())
+;(eval (parse '(- 3)) '())
+;(eval (parse '(let (x 4) (- x))) '())
 
 ;; 3
-(eval (parse '(3 < 4)) '())
-(eval (parse '(let (x 123) (= x 123))) '())
+;(eval (parse '(3 < 4)) '())
+;(eval (parse '(let (x 123) (= x 123))) '())
 
 ;; 4
-(eval (parse '(if (1 = 2) 1 2)) '())
-(eval (parse '(let (x 3) (let (y 2) (if (x = 0) (y) (/ y x))))) '())
+;(eval (parse '(if (1 = 2) 1 2)) '())
+;(eval (parse '(let (x 3) (let (y 2) (if (x = 0) (y) (/ y x))))) '())
