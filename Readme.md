@@ -12,6 +12,7 @@ We will not cover topics such as monads (even though we will look at the *Maybe*
 
 ### Reading Material ###
 
+- [Slides for lecture 1](https://github.com/fbie/parallel-functional-lectures/raw/master/1/slides/1.pdf)
 - [The Racket Guide: Types in Typed Racket](https://docs.racket-lang.org/ts-guide/types.html)
 
 ## Lecture 2: Parallel Computations on Immutable Data Structures ##
