@@ -128,6 +128,8 @@ Your task in this project is to extend the ```eval``` and ```parse``` functions 
 
 5. What would it take to add lambda expressions and application to the language? Can you implement it? Give it a try! It would be nice if you could bind lambdas to names using ```let```.  All lambdas should only be of type ```(-> Number Number)```.
 
+6. The file also contains the definition of a very simple and tiny type inference algorithm. Because our language is not polymorphic, it only contains types for numbers and booleans. Extend it such that all the new functions you have added can be type checked. For extra points, you can also implement polymorphic functions and then implement Hindley-Milner type inference for them.
+
 Some test expressions:
 
 For 1:
@@ -151,10 +153,20 @@ For 3:
 For 4:
 ```
 (eval (parse '(if (1 = 2) 1 2)) '())
-(eval (parse '(let (x 3) (let (y 2) (if (x = 0) (y) (/ y x))))) '())
+(eval (parse '(let (x 3) (let (y 2) (if (x = 0) y (/ y x))))) '())
 ```
 
-6) The file also contains the definition of a very simple and tiny type inference algorithm. Because our language is not polymorphic, it only contains types for numbers and booleans. Extend it such that all the new functions you have added can be type checked. For extra points, you can also implement polymorphic functions and then implement Hindley-Milner type inference for them.
+For 5:
+```
+(eval (parse '(let (f (lambda (x) x)) (f 1))) '())
+(eval (parse '(let (f (lambda (x) (* 2 x))) (f 2))) '())
+```
+
+For 6:
+```
+(type (parse '(let (x 2) (+ x x))) '())
+(type (parse '(let (x 0) (if (= x 0) 1 x))) '())
+```
 
 ## Useful Links ##
 
