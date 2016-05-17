@@ -21,7 +21,7 @@
 ;;
 ;; Some valid syntax examples:
 ;; x
-;; (1 + 2)
+;; (+ 1 2)
 ;; (let (x 5) (+ x x))
 ;; (let (y 5) (let x y) (+ x x))
 (: parse (-> Any Expr))
