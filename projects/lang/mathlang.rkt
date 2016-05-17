@@ -46,10 +46,9 @@
 ;; Retrieve the value stored for the variable name.
 (: env-load (-> String Env Number))
 (define (env-load s env)
-  (let ([v (assq s env)])
-    (if (not (eq? v #f))
-        (cdr v)
-        (error (format "Variable not bound to a value: ~a" s)))))
+    (match (assoc s env)
+    [(cons _ v) v]
+    [_ (error (format "Variable not bound to a value: ~a" s))]))
 
 ;; Store a value under a variable name.
 (: env-store (-> String Number Env Env))
@@ -128,10 +127,9 @@
 ;; Retrieve the stored type for the variable name.
 (: type-load (-> String TypeEnv MathType))
 (define (type-load s env)
-  (let ([v (assq s env)])
-    (if (not (eq? v #f))
-        (cdr v)
-        (error (format "Variable not bound to a type: ~a" s)))))
+  (match (assoc s env)
+    [(cons _ t) t]
+    [_ (error (format "Variable not bound to a type: ~a" s))]))
 
 ;; Store a type under a variable store.
 (: type-store (-> String MathType TypeEnv TypeEnv))
