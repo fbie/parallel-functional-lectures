@@ -110,3 +110,46 @@
 ;; 4
 ;(eval (parse '(if (1 = 2) 1 2)) '())
 ;(eval (parse '(let (x 3) (let (y 2) (if (x = 0) (y) (/ y x))))) '())
+
+;; 6) This is the definition of a very simple and tiny type inference
+;; algorithm. Because our language is not polymorphic, it only
+;; contains types for numbers and booleans. Extend it such that all
+;; the new functions you have added can be type checked.
+;;
+;; For extra points, you can also implement polymorphic functions and
+;; then implement Hindley-Milner type inference for them.
+
+;; The type that describes types in our language.
+(define-type MathType (U 'Number 'Bool))
+
+;; An environment that stores types for variable names.
+(define-type TypeEnv (Listof (Pairof String MathType)))
+
+;; Retrieve the stored type for the variable name.
+(: type-load (-> String TypeEnv MathType))
+(define (type-load s env)
+  (let ([v (assq s env)])
+    (if (not (eq? v #f))
+        (cdr v)
+        (error (format "Variable not bound to a type: ~a" s)))))
+
+;; Store a type under a variable store.
+(: type-store (-> String MathType TypeEnv TypeEnv))
+(define (type-store sym val env)
+  (cons (cons sym val) env))
+
+;; Infer the type of an expression, using the type environment tenv.
+(: type (-> Expr TypeEnv MathType))
+(define (type expr tenv)
+  (match expr
+    [(Const c) 'Number] ;; Always the number type!
+    [(Var v)   (type-load v tenv)] ;; Look-up type for variable name.
+    [(Let (Var v) e1 e2)
+               ;; Infer the type of e1, store under v and infer type of e2.
+               (type e2 (type-store v (type e1 tenv) tenv))]
+    [(Plus e1 e2) (if (and (eq? 'Number (type e1 tenv))  ;; Check whether e1 has the right type.
+                           (eq? 'Number (type e2 tenv))) ;; Check whether e2 has the right type.
+                      'Number ;; If both have the right type, the result type is 'Number.
+                      (error "Wrong type arguments for +-operator!"))] ;; Error otherwise.
+    [_ (error "Not implemented yet!")]
+    ))
