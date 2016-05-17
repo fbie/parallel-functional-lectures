@@ -87,6 +87,65 @@ As a bonus, you can try to implement ```rope-zip-with``` of type ```(All (A B C)
 
 You are not required to perform proper benchmarking of the parallel code, because we have not covered that during the lecture. You are of course allowed to, if you want to. We would like to see however that you use the [Future Visualizer](https://docs.racket-lang.org/future-visualizer/index.html) to see how much parallelism you achieve. Document your results and include them in your hand-in.
 
+### A Tiny Language Implementation ###
+
+The file [mathlang.rkt](https://github.com/fbie/parallel-functional-lectures/blob/master/projects/lang/mathlang.rkt) implements a tiny arithmetic language with Racket-style syntax. You can execute a statement in this language by using the ```parse``` and ```eval``` functions:
+
+```
+(eval (parse '(+ 1 2)) '())
+(eval (parse '(let (x 5) (+ x x))) '())```
+```
+
+(```'()``` is the empty environment or value store for the start of the execution.)
+
+The language consists of two steps: a parser that turns the expression into an abstract syntax tree (AST) and an interpreter that traverses the AST and executes the commands in it.
+
+Your task in this project is to extend the ```eval``` and ```parse``` functions in various ways:
+
+1. Implement the remaining arithmetic operators.
+
+2. Add a new operator ```-``` which takes only one argument and produces the negative value of it.
+
+3. Add boolean expressions, just like we have arithmetics, called ```Bool```. We need ```=``` ```<``` and ```>``` operators. Make sure to change the type of ```Env``` to ```(U Number Boolean)``` to also be able to store booleans. Also, you need to change the return type of eval to ```(U Number Boolean)```.
+
+4. What fun are boolean expressions without if-statements? Implement an if-expression called ```Cond```, with the following syntax:
+
+```
+(if b e1 e2)
+
+```
+(You can parse it from ````(if ,b ,e1 ,e2)```).
+
+If ```b``` evaluates to true, execute ```e1```, otherwise execute ```e2```.
+
+5. What would it take to add lambda expressions and application to the language? Can you implement it? Give it a try! All lambdas should only be of type ```(-> Number Number)```.
+
+Some text expressions:
+
+For 1:
+```
+(eval (parse '(* 2 5)) '())
+(eval (parse '(let (x (* 2 5) (/ x x)))) '())
+```
+
+For 2:
+```
+(eval (parse '(- 3)) '())
+(eval (parse '(let (x 4) (- x))) '())
+```
+
+For 3:
+```
+(eval (parse '(3 < 4)) '())
+(eval (parse '(let (x 123) (= x 123))) '())
+```
+
+For 4:
+```
+(eval (parse '(if (1 = 2) 1 2)) '())
+(eval (parse '(let (x 3) (let (y 2) (if (x = 0) (y) (/ y x))))) '())
+```
+
 ## Useful Links ##
 
 - [The Racket Website](http://racket-lang.org/)
