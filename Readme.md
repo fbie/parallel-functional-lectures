@@ -47,7 +47,7 @@ One such way is the *Rope* data structure. A rope is a binary tree with lists (o
 - [Hans-J. Boehm et al.: **Ropes: an Alternative to Strings**](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=02A88073F0332A35BA9A5EA132887B13?doi=10.1.1.14.9450&rep=rep1&type=pdf)
 - [Slides for lecture 2]()
 
-## Lecture 3 ##
+## Lecture 3: Parallel Programming in Java ##
 
 #### Content ####
 
@@ -57,7 +57,7 @@ TBA
 
 - [Slides for lecture 3]()
 
-## Lecture 4 ##
+## Lecture 4: Java 8 Streams ##
 
 #### Content ####
 
