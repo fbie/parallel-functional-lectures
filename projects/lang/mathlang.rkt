@@ -40,22 +40,25 @@
 ;; language. Interpreters do not compile the source code but execute
 ;; the expression tree.
 
-;; First, we need an environment to store values in, when we use let:
-(define-type Env (Listof (Pairof String Number)))
+;; First, we need a general environment to store values in:
+(define-type (Envof A) (Listof (Pairof String A)))
 
 ;; Retrieve the value stored for the variable name.
-(: env-load (-> String Env Number))
+(: env-load (All (A) (-> String (Envof A) A)))
 (define (env-load s env)
     (match (assoc s env)
-    [(cons _ v) v]
-    [_ (error (format "Variable not bound to a value: ~a" s))]))
+      [(cons _ v) v]
+      [_ (error (format "Free variable: ~a" s))]))
 
 ;; Store a value under a variable name.
-(: env-store (-> String Number Env Env))
+(: env-store (All (A) (-> String A (Envof A) (Envof A))))
 (define (env-store sym val env)
   (cons (cons sym val) env))
 
-(: eval (-> Expr Env Number))
+;; This is the type of environment for number values.
+(define-type ValEnv (Envof Number))
+
+(: eval (-> Expr ValEnv Number))
 (define (eval expr env)
   (match expr
     [(Const c)      c]
@@ -122,29 +125,17 @@
 (define-type MathType (U 'Number 'Bool))
 
 ;; An environment that stores types for variable names.
-(define-type TypeEnv (Listof (Pairof String MathType)))
-
-;; Retrieve the stored type for the variable name.
-(: type-load (-> String TypeEnv MathType))
-(define (type-load s env)
-  (match (assoc s env)
-    [(cons _ t) t]
-    [_ (error (format "Variable not bound to a type: ~a" s))]))
-
-;; Store a type under a variable store.
-(: type-store (-> String MathType TypeEnv TypeEnv))
-(define (type-store sym val env)
-  (cons (cons sym val) env))
+(define-type TypeEnv (Envof MathType))
 
 ;; Infer the type of an expression, using the type environment tenv.
 (: type (-> Expr TypeEnv MathType))
 (define (type expr tenv)
   (match expr
     [(Const c) 'Number] ;; Always the number type!
-    [(Var v)   (type-load v tenv)] ;; Look-up type for variable name.
+    [(Var v)   (env-load v tenv)] ;; Look-up type for variable name.
     [(Let (Var v) e1 e2)
                ;; Infer the type of e1, store under v and infer type of e2.
-               (type e2 (type-store v (type e1 tenv) tenv))]
+               (type e2 (env-store v (type e1 tenv) tenv))]
     [(Plus e1 e2) (if (and (eq? 'Number (type e1 tenv))  ;; Check whether e1 has the right type.
                            (eq? 'Number (type e2 tenv))) ;; Check whether e2 has the right type.
                       'Number ;; If both have the right type, the result type is 'Number.
