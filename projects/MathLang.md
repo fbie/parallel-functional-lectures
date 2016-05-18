@@ -1,4 +1,4 @@
-### A Tiny Math Language Implementation With Racket-Style Syntax ###
+# A Tiny Math Language Implementation With Racket-Style Syntax #
 
 The file [mathlang.rkt](https://github.com/fbie/parallel-functional-lectures/blob/master/projects/lang/mathlang.rkt) implements a tiny arithmetic language with Racket-style syntax. You can execute a statement in this language by using the ```parse``` and ```eval``` functions:
 
@@ -10,6 +10,8 @@ The file [mathlang.rkt](https://github.com/fbie/parallel-functional-lectures/blo
 (```'()``` is the empty environment or value store for the start of the execution.)
 
 The language consists of two steps: a parser that turns the expression into an abstract syntax tree (AST) and an interpreter that traverses the AST and executes the commands in it.
+
+### Your Task ###
 
 Your task in this project is to extend the ```eval``` and ```parse``` functions in various ways:
 
@@ -25,7 +27,7 @@ Your task in this project is to extend the ```eval``` and ```parse``` functions 
 
 6. The file also contains the definition of a very simple and tiny type inference algorithm. Because our language is not polymorphic, it only contains types for numbers and booleans. Extend it such that all the new functions you have added can be type checked. For extra points, you can also implement polymorphic functions and then implement Hindley-Milner type inference for them.
 
-Some test expressions:
+### Test Expressions ###
 
 For 1:
 ```
@@ -63,6 +65,10 @@ For 6:
 (type (parse '(let (x 0) (if (= x 0) 1 x))) '())
 ```
 
-##### Note! #####
+### Bonus Task ###
 
-If you want to, you are also allowed to do this project in Java. It will be *much* more work, though!
+Still not enough? Then you can try to implement a compiler that generates (untyped) Racket code. This involves a lot of meta-programming, but it is really exciting. Talk to me, if you want to do this and I can help you get started with meta-programming in Racket.
+
+### Note ###
+
+If you want to, you are also allowed to do this project in Java. It will be *much* more work, though, because you also need to write a parser. It might however be easier to write a compiler...
