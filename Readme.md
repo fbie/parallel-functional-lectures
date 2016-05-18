@@ -55,7 +55,7 @@ TBA
 
 #### Reading Material ####
 
-TBA
+- [Slides for lecture 3]()
 
 ## Lecture 4 ##
 
@@ -65,7 +65,7 @@ TBA
 
 #### Reading Material ####
 
-TBA
+- [Slides for lecture 4]()
 
 ## Projects ##
 
