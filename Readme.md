@@ -77,6 +77,8 @@ We have a number of practical projects to choose from. You should choose one pro
 - [Parallel Immutable Functional Data Structures](projects/ParallelRopes.md)
 - [A Tiny Math Language Implementation With Racket-Style Syntax](projects/MathLang.md)
 
+**You are very welcome to propose your own project ideas, especially if they also involve Java 8 Streams!**
+
 ## Useful Links ##
 
 - [The Racket Website](http://racket-lang.org/)
