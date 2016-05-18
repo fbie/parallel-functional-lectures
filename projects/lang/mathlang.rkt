@@ -71,7 +71,7 @@
 ;;
 ;; 1) Implement the remaining arithmetic operators.
 ;;
-;; 2) Add a new operator - which takes only one argument and produces
+;; 2) Add a new operator neg which takes only one argument and produces
 ;; the negative value of it.
 ;;
 ;; 3) Add boolean expressions, just like we have arithmetics, called
@@ -99,16 +99,16 @@
 ;(eval (parse '(let (x (* 2 5) (/ x x)))) '())
 
 ;; 2)
-;(eval (parse '(- 3)) '())
-;(eval (parse '(let (x 4) (- x))) '())
+;(eval (parse '(neg 3)) '())
+;(eval (parse '(let (x 4) (neg x))) '())
 
 ;; 3
-;(eval (parse '(3 < 4)) '())
+;(eval (parse '(< 3 4)) '())
 ;(eval (parse '(let (x 123) (= x 123))) '())
 
 ;; 4
-;(eval (parse '(if (1 = 2) 1 2)) '())
-;(eval (parse '(let (x 3) (let (y 2) (if (x = 0) (y) (/ y x))))) '())
+;(eval (parse '(if (< 1 2) 1 2)) '())
+;(eval (parse '(let (x 3) (let (y 2) (if (= x 0) (y) (/ y x))))) '())
 
 ;; 6) This is the definition of a very simple and tiny type inference
 ;; algorithm. Because our language is not polymorphic, it only
@@ -149,5 +149,4 @@
                            (eq? 'Number (type e2 tenv))) ;; Check whether e2 has the right type.
                       'Number ;; If both have the right type, the result type is 'Number.
                       (error "Wrong type arguments for +-operator!"))] ;; Error otherwise.
-    [_ (error "Not implemented yet!")]
-    ))
+    [_ (error "Not implemented yet!")]))

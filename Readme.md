@@ -120,7 +120,7 @@ Your task in this project is to extend the ```eval``` and ```parse``` functions 
 
 1. Implement the remaining arithmetic operators.
 
-2. Add a new operator ```-``` which takes only one argument and produces the negative value of it.
+2. Add a new operator ```neg``` which takes only one argument and produces the negative value of it.
 
 3. Add boolean expressions, just like we have arithmetics, called ```Bool```. We need ```=``` ```<``` and ```>``` operators. Make sure to change the type of ```Env``` to ```(U Number Boolean)``` to also be able to store booleans. Also, you need to change the return type of eval to ```(U Number Boolean)```.
 
@@ -140,20 +140,20 @@ For 1:
 
 For 2:
 ```
-(eval (parse '(- 3)) '())
-(eval (parse '(let (x 4) (- x))) '())
+(eval (parse '(neg 3)) '())
+(eval (parse '(let (x 4) (neg x))) '())
 ```
 
 For 3:
 ```
-(eval (parse '(3 < 4)) '())
+(eval (parse '(< 3 4)) '())
 (eval (parse '(let (x 123) (= x 123))) '())
 ```
 
 For 4:
 ```
-(eval (parse '(if (1 = 2) 1 2)) '())
-(eval (parse '(let (x 3) (let (y 2) (if (x = 0) y (/ y x))))) '())
+(eval (parse '(if (< 1 2) 1 2)) '())
+(eval (parse '(let (x 3) (let (y 2) (if (= x 0) y (/ y x))))) '())
 ```
 
 For 5:
