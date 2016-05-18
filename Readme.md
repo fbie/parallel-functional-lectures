@@ -103,6 +103,10 @@ First, implement this function sequentially, without any futures. Then, read thi
 
 You are not required to perform proper benchmarking of the parallel code. You are of course allowed to, if you want to, but it is not a requirement. We would like to see however that you use the [Future Visualizer](https://docs.racket-lang.org/future-visualizer/index.html) to see how much parallelism you achieve. Document your results and include them in your hand-in.
 
+#### Note ####
+
+If you want to, you are also allowed to do this project in Java, but you must re-implement *all* functions yourself!
+
 ### A Tiny Language Implementation ###
 
 The file [mathlang.rkt](https://github.com/fbie/parallel-functional-lectures/blob/master/projects/lang/mathlang.rkt) implements a tiny arithmetic language with Racket-style syntax. You can execute a statement in this language by using the ```parse``` and ```eval``` functions:
@@ -167,6 +171,10 @@ For 6:
 (type (parse '(let (x 2) (+ x x))) '())
 (type (parse '(let (x 0) (if (= x 0) 1 x))) '())
 ```
+
+#### Note! ####
+
+If you want to, you are also allowed to do this project in Java. It will be *much* more work, though!
 
 ## Useful Links ##
 
