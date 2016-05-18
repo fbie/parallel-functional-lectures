@@ -12,25 +12,10 @@ We will not cover topics such as monads (even though we will look at the *Maybe*
 
 ### Reading Material ###
 
+- [The Racket Guide: **Types in Typed Racket**](https://docs.racket-lang.org/ts-guide/types.html)
 - [Slides for lecture 1](https://github.com/fbie/parallel-functional-lectures/raw/master/1/slides/1.pdf)
-- [The Racket Guide: Types in Typed Racket](https://docs.racket-lang.org/ts-guide/types.html)
 
-## Lecture 2: Parallel Computations on Immutable Data Structures ##
-
-#### Content ####
-
-Parallel programming is difficult to get right if there is a lot of mutable state involved. In particular, programmers have to decide in advance how they want to distribute work across the available threads.
-
-With modern thread schedulers and the concept of *Futures* however, we can leave the problem of distributing work to the run-time scheduler. To do so in a functional language, we need to represent arrays in a way that lets us use the scheduler efficiently.
-
-One such way is the *Rope* data structure. A rope is a binary tree with lists (or arrays) at its leaves. In this lecture, we will look at how to define commonly used operations on container types, such as concatenation, ```map```, ```zip``` and ```fold``` and how to parallelize those which can be parallelized.
-
-#### Reading Material ####
-
-- [Michael Erdmann: **Parallelism, Cost Graphs, and Sequences**, lecture notes](http://www.cs.cmu.edu/~15150/resources/lectures/19/Parallelism.pdf)
-- [Hans-J. Boehm et al.: **Ropes: an Alternative to Strings**](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=02A88073F0332A35BA9A5EA132887B13?doi=10.1.1.14.9450&rep=rep1&type=pdf) (optional)
-
-#### Installing Racket ####
+### Installing Racket ###
 
 If you are on Ubuntu Linux, you can install Racket and DrRacket via the command line:
 
@@ -45,6 +30,22 @@ $ brew install racket
 ```
 
 On Windows, you will have to download the file from the web-site and install it manually.
+
+## Lecture 2: Parallel Computations on Immutable Data Structures ##
+
+#### Content ####
+
+Parallel programming is difficult to get right if there is a lot of mutable state involved. In particular, programmers have to decide in advance how they want to distribute work across the available threads.
+
+With modern thread schedulers and the concept of *Futures* however, we can leave the problem of distributing work to the run-time scheduler. To do so in a functional language, we need to represent arrays in a way that lets us use the scheduler efficiently.
+
+One such way is the *Rope* data structure. A rope is a binary tree with lists (or arrays) at its leaves. In this lecture, we will look at how to define commonly used operations on container types, such as concatenation, ```map```, ```zip``` and ```fold``` and how to parallelize those which can be parallelized.
+
+#### Reading Material ####
+
+- [Michael Erdmann: **Parallelism, Cost Graphs, and Sequences**, lecture notes](http://www.cs.cmu.edu/~15150/resources/lectures/19/Parallelism.pdf)
+- [Hans-J. Boehm et al.: **Ropes: an Alternative to Strings**](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=02A88073F0332A35BA9A5EA132887B13?doi=10.1.1.14.9450&rep=rep1&type=pdf)
+- [Slides for lecture 2]()
 
 ## Lecture 3 ##
 
