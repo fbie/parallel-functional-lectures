@@ -13,7 +13,7 @@ We will not cover topics such as monads (even though we will look at the *Maybe*
 ### Reading Material ###
 
 - [The Racket Guide: **Types in Typed Racket**](https://docs.racket-lang.org/ts-guide/types.html)
-- [Slides for lecture 1](https://github.com/fbie/parallel-functional-lectures/raw/master/1/slides/1.pdf)
+- [Slides for lecture 1](1/slides/1.pdf)
 
 ### Installing Racket ###
 
@@ -72,7 +72,7 @@ TBA
 We have a number of practical projects to choose from. You should choose one project in groups of 2 - 3 students, not more and not less.
 
 - [Typing an Untyped Racket Library](projects/LibraryTypes.md)
-- [Parallel Immutable Functional Data Structures](ParallelRopes.md)
+- [Parallel Immutable Functional Data Structures](projects/ParallelRopes.md)
 - [A Tiny Math Language Implementation With Racket-Style Syntax](projects/MathLang.md)
 
 ## Useful Links ##
