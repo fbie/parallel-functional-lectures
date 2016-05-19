@@ -221,6 +221,19 @@ add-one
  (Cons 'a (Cons 'b (Nil)))
  (Cons 'x (Cons 'y (Cons 'z (Nil)))))
 
+;; We often also want to remove a specific item from the list. To do
+;; so, we must traverse the list, find the item in question and then
+;; re-build the list:
+(: Remove (All (A) (-> A (LinkedList A) (LinkedList A))))
+(define (Remove a as)
+  (match as
+    [(Nil) (Nil)]
+    [(Cons x tail) (if (eq? x a)
+                       tail
+                       (Cons x (Remove a tail)))]))
+
+(Remove 'b (Cons 'a (Cons 'b (Cons 'c (Nil)))))
+
 ;; Q: Do you start seeing a pattern?
 ;;
 ;; It seems that we always have to look at two cases:
@@ -378,8 +391,8 @@ add-one
 ;; And now we repeat the operations, using the smaller functions on
 ;; single (sometimes also called scalar) values as parameter:
 
-(Map better-grade students)
-(Map get-book-price books)
+(define better-students (Map better-grade students))
+(define book-prices (Map get-book-price books))
 
 ;; Now we have learned that we can apply any function on single
 ;; elements to a collection of elements, such as a linked list.
@@ -402,10 +415,16 @@ add-one
 ;; We also might want to end up with a single value instead of a
 ;; list. For example, we might want to know the overall price for our
 ;; books. There is a function called reduce, that can help us with
-;; that:
+;; that. It takes as arguments a function of type A -> A -> A, a
+;; "starting element" of type A and a linked list that contains
+;; elements of type A:
 
 (: Reduce (All (A) (-> (-> A A A) A (LinkedList A) A)))
 (define (Reduce f state as)
   (match as
     [(Nil) state]
     [(Cons a tail) (Reduce f (f state a) tail)]))
+
+;; Now, we can compute the sum of the book price.
+
+(Reduce + 0 book-prices)
