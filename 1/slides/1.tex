@@ -256,6 +256,16 @@ Polymorphic types in Typed Racket are very explicit:
 It's just like generic types in Java!
 \end{frame}
 
+\begin{frame}[fragile]{The Same Program in Java}
+\begin{lstlisting}[style=Java]
+public static Pairof<A, A> twice(A a) {
+  return new Pairof<A, A>(a);
+}
+\end{lstlisting}
+
+\textbf{Note:} There is no build-in pair type in Java :(
+\end{frame}
+
 \begin{frame}[fragile]{Local Bindings, Revisited}
 
 Let's turn our local binding example into a function!
