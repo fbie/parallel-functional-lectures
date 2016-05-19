@@ -76,4 +76,4 @@ If you want to, you are also allowed to do this project in Java. It will be *muc
 ### Additional Reading ###
 
 - [Matt Might: **7 lines of code, 3 minutes: Implement a programming language from scratch**, blog post](http://matt.might.net/articles/implementing-a-programming-language/)
-- [Annotated version of Matt Might's interpreter](projects/lang/lang.rkt)
+- [Annotated version of Matt Might's interpreter](lang/lang.rkt)
