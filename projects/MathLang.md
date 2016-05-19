@@ -72,3 +72,7 @@ Still not enough? Then you can try to implement a compiler that generates (untyp
 ### Note ###
 
 If you want to, you are also allowed to do this project in Java. It will be *much* more work, though, because you also need to write a parser. It might however be easier to write a compiler...
+
+### Additional Reading ###
+
+- [Matt Might: **7 lines of code, 3 minutes: Implement a programming language from scratch**, blog post](http://matt.might.net/articles/implementing-a-programming-language/)
