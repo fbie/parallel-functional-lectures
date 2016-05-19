@@ -66,11 +66,9 @@ add-one
 
 (: is-even? (-> Integer Boolean))
 (define (is-even? n)
-  (if (= n 0)
-      #t
-      (if (< n 0)
-          #f
-          (is-even? (- n 2)))))
+  (if (< 0 n)
+      (is-even? (- n 2))
+      (= n 0)))
 
 ;; Q: What does this function do? How does it do it?
 

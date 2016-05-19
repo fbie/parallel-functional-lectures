@@ -284,27 +284,40 @@ public static Pairof<A, A> twice(A a) {
 \textbf{Note:} There is no build-in pair type in Java :(
 \end{frame}
 
-\begin{frame}[fragile]{Local Bindings, Revisited}
+\begin{frame}[fragile]{State is Immutable!}
 
-Let's turn our local binding example into a function!
+You cannot change a variable's value. Instead, use \textbf{recursion}:
 
 \begin{lstlisting}
-(: two-three-sum (-> Number Number Number))
-(define (two-three-sum a b)
-  (let ([x (* 2 a)]
-        [y (* 3 b)])
-      (+ x y))
+(: is-even? (-> Integer Boolean))
+(define (is-even? n)
+  (if (< 0 n)
+      (is-even? (- n 2))
+      (= n 0)))
 \end{lstlisting}
 
 \pause{}
 
-Now, we can call it like any other function:
+Now, we can call the function:
 
 \begin{lstlisting}
-> (two-three-sum 1 1)
-5
-> (two-three-sum 20 20)
-100
+> (is-even? 1)
+#f
+\end{lstlisting}
+\pause{}
+\begin{lstlisting}
+> (is-even? 2048)
+#t
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The Same Program in Java}
+\begin{lstlisting}[style=Java]
+public static bool isEven(int n) {
+  while (0 < n)
+    n = n - 2;
+  return n == 0;
+}
 \end{lstlisting}
 \end{frame}
 
