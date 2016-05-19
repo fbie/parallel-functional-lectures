@@ -175,7 +175,7 @@ Just like local variables in Java, but you can never change them!
 
 (let ([x (* 2 16)]
       [y (* 3 17)])
-    (+ x y))
+    (print (+ x y)))
 \end{lstlisting}
 
 What does this program do?
@@ -188,9 +188,11 @@ What does this program do?
 
 \begin{frame}[fragile]{The Same Program in Java}
 \begin{lstlisting}[style=Java]
-int x = 2 * 16;
-int y = 3 * 17;
-x + y;
+public static void main(String[] args) {
+  int x = 2 * 16;
+  int y = 3 * 17;
+  System.out.println(x + y);
+}
 \end{lstlisting}
 \end{frame}
 
