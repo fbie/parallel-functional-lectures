@@ -72,8 +72,8 @@ add-one
 
 ;; Q: What does this function do? How does it do it?
 
-(even? 42)
-(even? 23)
+(is-even? 42)
+(is-even? 23)
 
 (: fib (-> Integer Integer))
 (define (fib n)
@@ -88,7 +88,7 @@ add-one
 
 ;; We can also define our own data structures with the struct keyword:
 
-(struct None ())           ;; This struct contains noting.
+(struct None ())           ;; This struct contains nothing.
 (struct (A) Some ([a : A]) ;; This struct contains one value of type
                            ;; A. Types must be inlined for structs. It
                            ;; is like a generic class in Java.
@@ -318,9 +318,9 @@ add-one
                     (everyone-better-grade tail))])) ;; Continue to the next.
 
 (: students (LinkedList Student))
-(define students (Cons (Student "Li" 34)
-                       (Cons (Student "Wu" 80)
-                             (Cons (Student "Xiaoning" 73)
+(define students (Cons (Student "A" 34)
+                       (Cons (Student "B" 80)
+                             (Cons (Student "C" 73)
                                    (Nil)))))
 
 ;; Uh, oh. You need at least 40% in order to pass in this course...
@@ -399,47 +399,13 @@ add-one
 
 (Filter (lambda ([s : Student]) (< (Student-grade s) 40)) students)
 
-;; Project:
-;;
-;; Here is a Typed-Racket implementation of BinaryTree. You may draw
-;; inspiration from the Java examples.
+;; We also might want to end up with a single value instead of a
+;; list. For example, we might want to know the overall price for our
+;; books. There is a function called reduce, that can help us with
+;; that:
 
-(define-type (BinaryTree A) (U (Leaf A) (Node A (BinaryTree A) (BinaryTree A))))
-(struct (A) Leaf ([a : A]))
-;; The type variable name must be named exactly as many times as it
-;; occurs in the definition.
-(struct (A A A) Node ([a : A] [lhs : (BinaryTree A)] [rhs : (BinaryTree A)]))
-
-;; 1) Write a function Size that returns the number of elements in a
-;; binary tree instance. You should only count leaves, not
-;; nodes. Explain, in English, what your function does in each step.
-
-(: Size (All (A) (-> (BinaryTree A) Integer)))
-(define (Size ba)
-  ;; NOT to be handed out.
-  (match ba
-    [(Leaf _) 1]
-    [(Node _ lhs rhs) (+ (Size lhs) (Size rhs))]))
-
-;; 2) Write a function Invert that swaps the left-hand side and the
-;; right-hand side of a binary tree instance. Explain, in English,
-;; what your function does in each step.
-
-(: Invert (All (A) (-> (BinaryTree A) (BinaryTree A))))
-(define (Invert ba)
-  ;; NOT to be handed out.
-  (match ba
-    [(Leaf _) ba]
-    [(Node a lhs rhs) (Node a (Invert rhs) (Invert lhs))]))
-
-;; 3) Write a function MapTree that maps a function f to all elements
-;; of some binary tree instance and return a new tree that consists of
-;; the results of f. Explain, in English, what your function does in
-;; each step.
-
-(: MapTree (All (A B) (-> (-> A B) (BinaryTree A) (BinaryTree B))))
-(define (MapTree f ba)
-  ;; NOT to be handed out.
-  (match ba
-    [(Leaf a) (Leaf (f a))]
-    [(Node a lhs rhs) (Node (f a) (MapTree f lhs) (MapTree f rhs))]))
+(: Reduce (All (A) (-> (-> A A A) A (LinkedList A) A)))
+(define (Reduce f state as)
+  (match as
+    [(Nil) state]
+    [(Cons a tail) (Reduce f (f state a) tail)]))
