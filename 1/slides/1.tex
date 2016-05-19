@@ -313,8 +313,11 @@ We will often come across lambda expressions in functional programming!
 Structs are containers for values.
 
 \begin{lstlisting}
-(struct (myNumberBox [value : Number]))
-(struct (myStringBox [value : String]))
+(struct (myNumberBox
+              [v : Number]))
+
+(struct (myNumberStringBox
+             ([n : Number] [s : String])))
 \end{lstlisting}
 
 \pause{}
