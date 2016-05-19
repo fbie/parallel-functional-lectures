@@ -234,6 +234,22 @@ where \lstinline{A} is the parameter type and \lstinline{B} is the return type.
 Which types are parameter types, which ones are return types?
 \end{frame}
 
+\begin{frame}[fragile]{A Second Function}
+\begin{lstlisting}
+(: funny (-> Number Number)
+(define (funny x)
+  (if (< x 0)
+      (- x)
+      x))
+\end{lstlisting}
+
+\vspace{1.5cm}
+
+\pause{}
+
+Conditionals have the form \lstinline{(if B E1 E2)}.
+\end{frame}
+
 \begin{frame}[fragile]{Polymorphic Types}
 Polymorphic types in Typed Racket are very explicit:
 
