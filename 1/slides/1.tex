@@ -240,7 +240,7 @@ Polymorphic types in Typed Racket are very explicit:
 \begin{lstlisting}
 (: twice (All (A) (-> A (Pairof A A))))
 (define (twice a)
-  (pair a a))
+  (cons a a))
 \end{lstlisting}
 
 \pause{}
@@ -262,6 +262,8 @@ public static Pairof<A, A> twice(A a) {
   return new Pairof<A, A>(a);
 }
 \end{lstlisting}
+
+\vspace{1.5cm}
 
 \textbf{Note:} There is no build-in pair type in Java :(
 \end{frame}
