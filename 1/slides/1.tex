@@ -26,7 +26,7 @@
 \lstdefinestyle{Racket}{
   language=Lisp,
   basicstyle=\ttfamily,
-  otherkeywords={\#lang,define,match,let,:,->,lambda,struct,define-type},
+  otherkeywords={\#lang,define,match,let,:,->,lambda,struct,define-type,car,cdr},
   identifierstyle=\color{pink!60!blue},
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
@@ -40,6 +40,20 @@
 
 \lstset{
   style=Racket
+}
+
+\usetikzlibrary{shapes.multipart, chains, positioning}
+\tikzset{cons/.style n args=2{
+    on chain,
+    rectangle split,
+    rectangle split horizontal,
+    rectangle split parts=2,
+    draw,
+    anchor=center,
+    text height=1.5ex,
+    node contents={#1\nodepart{two}#2},
+    join={by ->}
+  }
 }
 
 \title{Functional Programming in Typed Racket}
@@ -394,6 +408,72 @@ public class Some<A> extends Maybe<A> {
   }
 }
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Singly-Linked Cons List 1/2}
+\begin{lstlisting}
+(define xs (cons 'a (cons 'b
+    (cons 'c (cons 'd (cons 'e '()))))))
+\end{lstlisting}
+
+\pause{}
+
+Get the first element of \lstinline{xs}, the ``head'':
+
+\begin{lstlisting}
+> (first xs)
+'a
+> (cdr xs)
+'a
+\end{lstlisting}
+
+\pause{}
+
+Get the remaining part of \lstinline{xs}, the ``tail'':
+
+\begin{lstlisting}
+> (rest xs)
+'('b 'c 'd 'e)
+> (cdr xs)
+'('b 'c 'd 'e)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Singly-Linked Cons List 2/2}
+References to tail \textbf{cannot be changed}, because all \textbf{references are immutable}:
+
+\vspace{.5cm}
+
+\begin{tikzpicture}[start chain=going right]
+  \node (a) [cons={\lstinline{'a}}{}];
+  \node (b) [cons={\lstinline{'b}}{}];
+  \node (c) [cons={\lstinline{'c}}{}];
+  \node (d) [cons={\lstinline{'d}}{}];
+  \node (e) [cons={\lstinline{'e}}{$\emptyset$}];
+\end{tikzpicture}
+
+\pause{} \vspace{.5cm}
+
+If we want to remove an element, we must build a new list, but we can re-use the tail of the element that we have deleted:
+
+\begin{lstlisting}
+(remove xs 'c)
+\end{lstlisting}
+
+\begin{tikzpicture}[start chain=going right]
+  \node (a) [cons={\lstinline{'a}$_0$}{}];
+  \node (b) [cons={\lstinline{'b}$_0$}{}];
+  \node (c) [cons={\lstinline{'c}$_0$}{}];
+  \node (d) [cons={\lstinline{'d}$_0$}{}];
+  \node (e) [cons={\lstinline{'e}$_0$}{$\emptyset$}];
+\end{tikzpicture}
+\pause{}
+\begin{tikzpicture}[start chain=going right]
+  \node (a) [cons={\lstinline{'a}$_1$}{}];
+  \node (b) [cons={\lstinline{'b}$_1$}{}];
+  \draw [->] (2.277, .0) .. controls (4.7, .0) and (4.7, .1) .. (4.7, .5);
+\end{tikzpicture}
+
 \end{frame}
 
 \begin{frame}[fragile]{Java Equivalent to Cons List}
