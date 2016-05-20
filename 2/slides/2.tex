@@ -1,0 +1,316 @@
+\documentclass{beamer}
+\usepackage{beamerthemeOerestad}
+\usetheme{Oerestad}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{dirtytalk}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{url}
+\usepackage{semantic}
+\usepackage{tikz}
+\usepackage{todonotes}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=cyan
+}
+
+\lstdefinestyle{Racket}{
+  language=Lisp,
+  basicstyle=\ttfamily,
+  otherkeywords={\#lang,define,match,let,:,->,lambda,struct,define-type,car,cdr},
+  identifierstyle=\color{pink!60!blue},
+  keywordstyle=\color{blue!50!black},
+  stringstyle=\color{green!50!black},
+  commentstyle=\color{pink!60!black}
+}
+
+\lstdefinestyle{Java}{
+  language=Java,
+  basicstyle=\ttfamily
+}
+
+\lstset{
+  style=Racket
+}
+
+\tikzstyle{element} = [text centered, node distance=1.2cm]
+\tikzstyle{line} = [-, draw]
+
+\title{Parallel Computations\\ on\\ Immutable Data Structures}
+\author{Florian Biermann \\\small{\texttt{fbie@itu.dk}} \\~}
+
+\institute{IT University of Copenhagen \& UCAS}
+
+\date{2016-06-02}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage{}
+\end{frame}
+
+\begin{frame}[fragile]{A Recursive Function}
+  \begin{center}
+    $\sum_{i=1}^6 i$ ~ = ~ \lstinline{(+ 1 (+ 2 (+ 3 (+ 4 (+ 5 6)))))}
+  \end{center}
+
+  \pause{} \vspace{.5cm}
+
+  The expression's call-tree:
+
+  \begin{center}
+    \begin{tikzpicture}[auto]
+      \node[element] (op1) {\lstinline{+}};
+      \node[element, below left of=op1] (c1) {\lstinline{1}};
+      \node[element, below right of=op1] (op2) {\lstinline{+}};
+      \node[element, below left of=op2] (c2) {\lstinline{2}};
+      \node[element, below right of=op2] (op3) {\lstinline{+}};
+      \node[element, below left of=op3] (c3) {\lstinline{3}};
+      \node[element, below right of=op3] (op4) {\lstinline{+}};
+      \node[element, below left of=op4] (c4) {\lstinline{4}};
+      \node[element, below right of=op4] (op5) {\lstinline{+}};
+      \node[element, below left of=op5] (c5) {\lstinline{5}};
+      \node[element, below right of=op5] (c6) {\lstinline{6}};
+
+      \path[line] (op1) to (c1);
+      \path[line] (op1) to (op2);
+      \path[line] (op2) to (c2);
+      \path[line] (op2) to (op3);
+      \path[line] (op3) to (c3);
+      \path[line] (op3) to (op4);
+      \path[line] (op4) to (c4);
+      \path[line] (op4) to (op5);
+      \path[line] (op5) to (c5);
+      \path[line] (op5) to (c6);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{What Is The Problem?}
+All operations are performed sequentially, even though it would be perfectly ok to compute
+
+\begin{lstlisting}
+  (+ 1 (+ 2 3))
+\end{lstlisting}
+
+and
+
+\begin{lstlisting}
+  (+ 4 (+ 5 6))
+\end{lstlisting}
+
+in parallel.
+
+\pause{} \vspace{1cm}
+
+We can re-formulate the expression and obtain the same result!
+\end{frame}
+
+\begin{frame}[fragile]{A Parallel Expression}
+  \begin{center}
+    $\sum_{i=1}^6 i$ ~ = ~ \lstinline{(+ (+ 1 (+ 2 3)) (+ 4 (+ 5 6)))}
+  \end{center}
+
+  \pause{} \vspace{.5cm}
+
+  The expression's call-tree:
+
+  \begin{center}
+    \begin{tikzpicture}[auto]
+      \node[element] (op1) {\lstinline{+}};
+
+      \node[element, below of=op1] (dummy) {};
+
+      \node[element, left of=dummy] (op2) {\lstinline{+}};
+      \node[element, below left of=op2] (c1) {\lstinline{1}};
+      \node[element, below right of=op2] (op3) {\lstinline{+}};
+      \node[element, below left of=op3] (c2) {\lstinline{2}};
+      \node[element, below right of=op3] (c3) {\lstinline{3}};
+
+      \node[element, right of=dummy] (op4) {\lstinline{+}};
+      \node[element, below left of=op4] (c4) {\lstinline{4}};
+      \node[element, below right of=op4] (op5) {\lstinline{+}};
+      \node[element, below left of=op5] (c5) {\lstinline{5}};
+      \node[element, below right of=op5] (c6) {\lstinline{6}};
+
+      \path[line] (op1) to (op2);
+      \path[line] (op1) to (op4);
+      \path[line] (op2) to (c1);
+      \path[line] (op2) to (op3);
+      \path[line] (op3) to (c2);
+      \path[line] (op3) to (c3);
+      \path[line] (op4) to (c4);
+      \path[line] (op4) to (op5);
+      \path[line] (op5) to (c5);
+      \path[line] (op5) to (c6);
+    \end{tikzpicture}
+  \end{center}
+
+\pause{}
+
+Why is this possible? Because + is an associative operation!
+
+\begin{center}
+\lstinline{(+ x (+ y z))} = \lstinline{(+ (+ x y) z)}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Generalizing Parallel Expressions}
+We can do this for any function \lstinline{f} iff
+  \begin{center}
+    \lstinline{(f a (f b c))} ~ = ~ \lstinline{(f (f a b) c)}
+
+    \vspace{1cm}
+
+    \begin{tikzpicture}[auto]
+      \node[element] (op1) {\lstinline{f}};
+
+      \node[element, below of=op1] (dummy) {};
+
+      \node[element, left of=dummy] (op2) {\lstinline{f}};
+      \node[element, below left of=op2] (c1) {\dots};
+      \node[element, below right of=op2] (c2) {\dots};
+
+      \node[element, right of=dummy] (op3) {\lstinline{f}};
+      \node[element, below left of=op3] (c3) {\dots};
+      \node[element, below right of=op3] (c4) {\dots};
+
+      \path[line] (op1) to (op2);
+      \path[line] (op1) to (op3);
+      \path[line] (op2) to (c1);
+      \path[line] (op2) to (c2);
+      \path[line] (op3) to (c3);
+      \path[line] (op3) to (c4);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Another Problem}
+Mapping a function \lstinline{f} over a \lstinline{cons} list.
+
+\begin{lstlisting}
+(: seq-map (All (A B)
+    (-> (-> A B) (Listof A) (Listof B))))
+(define (seq-map f xs)
+  (match xs
+    ['() '()]
+    [(cons x xs) (cons (f x) (seq-map f xs))]))
+\end{lstlisting}
+
+\pause{} \vspace{.5cm}
+
+Call-tree of \lstinline{seq-map}:
+
+  \begin{center}
+    \begin{tikzpicture}[auto]
+      \node[element] (op1) {\lstinline{cons}};
+      \node[element, below left of=op1] (c1) {\lstinline{(f x0)}};
+      \node[element, below right of=op1] (op2) {\lstinline{cons}};
+      \node[element, below left of=op2] (c2) {\lstinline{(f x1)}};
+      \node[element, below right of=op2] (op3) {\lstinline{cons}};
+      \node[element, below left of=op3] (c3) {\lstinline{(f x2)}};
+      \node[element, below right of=op3] (op4) {\dots};
+
+      \path[line] (op1) to (c1);
+      \path[line] (op1) to (op2);
+      \path[line] (op2) to (c2);
+      \path[line] (op2) to (op3);
+      \path[line] (op3) to (c3);
+      \path[line] (op3) to (op4);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{What Is The Problem?}
+  \lstinline{seq-map} is not the problem. It is the only way to handle a \lstinline{cons} list. \textbf{The real problem is the single-linked list!} It is inherently sequential.
+
+\pause{} \vspace{1cm}
+
+All parallel expressions we saw so far were trees. Maybe we can develop a tree data structure that we can use to implement a parallel version of \lstinline{map}?
+\end{frame}
+
+\begin{frame}[fragile]{A New Parallel Data Type}
+We represent the list as a tree instead:
+\begin{lstlisting}
+(define-type (CatListof A) (U (leaf A) (cat A)))
+(struct (A) leaf ([a : A]))
+(struct (A) cat ([l : (CatListof A)]
+                 [r : (CatListof A)]))
+\end{lstlisting}
+
+\pause{} \vspace{.5cm}
+
+\lstinline{(leaf a)} produces a singleton \lstinline{CatList}.
+
+\lstinline{(cat l r)} concatenates two \lstinline{CatList} instances.
+\end{frame}
+
+\begin{frame}[fragile]{Let's Implement Map!}
+\begin{lstlisting}
+(: par-map (All (A B)
+  (-> (-> A B) (CatListof A) (CatListof B))))
+(define (par-map f xs)
+  (match xs
+    [(leaf x) (leaf (f x))]
+    [(cat l r) (cat (par-map f l)
+                    (par-map f r))]))
+\end{lstlisting}
+
+\pause{} \vspace{.5cm}
+
+Is this efficient? There are a few things to be aware of:
+
+\begin{itemize}
+\item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
+\item If the tree is not balanced, we lose parallelism.
+\item It is not truly parallel yet. This is the next step!
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Parallelism in Racket}
+In Racket we use a fork/join style model of parallel computations. Fork is called \lstinline{future} and join is called \lstinline{touch}:
+
+\begin{lstlisting}
+(: in-parallel (All (A B C)
+  (-> (-> A B) (-> A C) A (Pairof B C))))
+(define (in-parallel f g x)
+  (let ([fx (future (lambda () (f x)))]
+        [gx (g x)])
+    (cons (touch fx) gx)))
+\end{lstlisting}
+
+\pause{} \vspace{.5cm}
+
+Racket has a built-in scheduler for \lstinline{future}s, so we give a lot of control to the run-time.
+
+\lstinline{(: future (All (A) (-> (-> A) (Futureof A))))}
+
+\lstinline{(: touch  (All (A) (-> (Futureof A) A)))}
+\end{frame}
+
+\begin{frame}[fragile]{Parallelizing Map, For Real}
+\begin{lstlisting}
+(: par-map (All (A B)
+  (-> (-> A B) (CatListof A) (CatListof B))))
+(define (par-map f xs)
+  (match xs
+    [(leaf x) (leaf (f x))]
+    [(cat l r)
+       (let ([l0 (future ;; Map l in parallel.
+                   (lambda () (par-map f l)))]
+             [r0 (future ;; Map r in parallel.
+                   (lambda () (par-map f r)))])
+         (cat (touch l0) (touch r0)))]))
+\end{lstlisting}
+\end{frame}
+
+\end{document}
