@@ -171,7 +171,7 @@ We can check its value in the interactive mode:
 
   \pause{}
 
-  Some functions are \textit{variadic}:
+  Some functions are \textbf{variadic}:
 
   \begin{center}
     \begin{tabular}{ccc}
@@ -197,7 +197,7 @@ What does this program do?
 
 \vspace{1cm}
 
-\textit{Note:} You cannot reference \lstinline{x} and \lstinline{y} after the last closing parenthesis of the \lstinline{let} expression!
+\textbf{Note:} You cannot reference \lstinline{x} and \lstinline{y} after the last closing parenthesis of the \lstinline{let} expression!
 
 \end{frame}
 
@@ -339,7 +339,7 @@ public static bool isEven(int n) {
 \end{frame}
 
 \begin{frame}[fragile]{Anonymous Functions}
-You can define functions without giving them a name. Such functions are called \textit{lambda expressions}:
+You can define functions without giving them a name. Such functions are called \textbf{lambda expressions}:
 
 \begin{lstlisting}
 > ((lambda (x) x) 2)
@@ -348,10 +348,10 @@ You can define functions without giving them a name. Such functions are called \
 
 \pause{}
 
-Here, we have defined a lambda expression and applied it to the value \lstinline{2}. We call this function  the \textit{identity function}. It is the same as
+Here, we have defined a lambda expression and applied it to the value \lstinline{2}. We call this function  the \textbf{identity function}. The line above is equal to
 
 \begin{center}
-$\lambda\, x\, .\, x$
+$((\lambda\, x\, .\, x)\, 2)$
 \end{center}
 
 \pause{}
