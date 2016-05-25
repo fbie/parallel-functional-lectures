@@ -26,7 +26,7 @@
 \lstdefinestyle{Racket}{
   language=Lisp,
   basicstyle=\ttfamily,
-  otherkeywords={\#lang,define,match,let,let*,:,->,lambda,struct,define-type,car,cdr},
+  otherkeywords={\#lang,define,match,let,letrec,:,->,lambda,struct,define-type,car,cdr},
   identifierstyle=\color{pink!60!blue},
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
@@ -369,11 +369,11 @@ Standard \lstinline{let}:
 
 \pause{} \vspace{0.5cm}
 
-Solution: \lstinline{let*}, recursive let-binding:
+Solution: \lstinline{letrec}, recursive let-binding:
 
 \begin{lstlisting}
-(let* ([x 1]
-       [y (+ 2 x)])
+(letrec ([x 1]
+         [y (+ 2 x)])
   (* y x))
 \end{lstlisting}
 
