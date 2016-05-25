@@ -14,13 +14,8 @@
 ;; simple implementation of reduce on lists.
 (: reduce (All (A) (-> (-> A A A) (Listof A) A)))
 (define (reduce f as)
-  (: reduce-internal (All (A) (-> (-> A A A) A (Listof A) A)))
-  (define (reduce-internal f state as)
-    (match as
-      ['() state]
-      [(cons a0 as) (reduce-internal f (f state a0) as)]))
   (assert (not (null? as)))
-  (reduce-internal f (car as) (cdr as)))
+  (foldl f (car as) (cdr as)))
 
 ;; This is our rope type.
 (define-type (Ropeof A) (U (Leaf A) (Cat A)))
