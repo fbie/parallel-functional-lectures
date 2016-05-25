@@ -124,7 +124,7 @@
 
 ;; The same as rope-reduce but runs in parallel!
 (: rope-preduce (All (A) (-> (-> A A A) (Ropeof A) A)))
-(define (rope-preduce f state rope)
+(define (rope-preduce f rope)
   (match rope
     [(Leaf as) (reduce f as)] ;; Base case, reduce the leaf list.
     [(Cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))  ;; Start a future for the left part.
