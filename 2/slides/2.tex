@@ -42,6 +42,7 @@
   style=Racket
 }
 
+\usetikzlibrary{shapes}
 \tikzstyle{element} = [text centered, node distance=1.2cm]
 \tikzstyle{line} = [-, draw]
 
@@ -323,8 +324,32 @@ We call such a tree a \textbf{Rope}:
 \end{frame}
 
 \begin{frame}{Ropes: Trees With Lists as Leaves}
+  We must define a \textbf{maximum size} $s_{\max}$ for leaves. In this example, $s_{\max}\,=\,3$:
+
   \begin{center}
-    \begin{tikzpicture}[auto]
+    \begin{tikzpicture}[level distance=0.75cm]
+      \tikzstyle{every node}=[scale=0.75]]
+      \tikzstyle{level 1}=[sibling distance=4.8cm]
+      \tikzstyle{level 2}=[sibling distance=2.4cm]
+      \tikzstyle{level 3}=[sibling distance=1.2cm]
+      \node [circle, draw] {}
+        child {node [circle, draw] {}
+          child {node [circle, draw] {}
+            child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+            child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+          }
+          child {node [circle, draw] {}
+            child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+            child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+          }
+        }
+        child {node [circle, draw] {}
+          child {node [circle, draw] {}
+            child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+            child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+          }
+          child {node [rectangle split, rectangle split horizontal, rectangle split parts=2, draw] {}}
+        };
     \end{tikzpicture}
   \end{center}
 \end{frame}
