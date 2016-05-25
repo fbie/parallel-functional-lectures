@@ -26,7 +26,7 @@
 \lstdefinestyle{Racket}{
   language=Lisp,
   basicstyle=\ttfamily,
-  otherkeywords={\#lang,define,match,let,:,->,lambda,struct,define-type,car,cdr},
+  otherkeywords={\#lang,define,match,let,let*,:,->,lambda,struct,define-type,car,cdr},
   identifierstyle=\color{pink!60!blue},
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
@@ -265,15 +265,8 @@ We represent the list as a tree instead:
                     (par-map f r))]))
 \end{lstlisting}
 
-\pause{} \vspace{.5cm}
+This function is not truly parallel yet. That is the next step!
 
-Is this efficient? There are a few things to be aware of:
-
-\begin{itemize}
-\item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
-\item If the tree is not balanced, we lose parallelism.
-\item It is not truly parallel yet. This is the next step!
-\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Parallelism in Racket}
@@ -311,6 +304,68 @@ Racket has a built-in scheduler for \lstinline{future}s, so we give a lot of con
                    (lambda () (par-map f r)))])
          (cat (touch l0) (touch r0)))]))
 \end{lstlisting}
+
+The recursive call is wrapped in a \lstinline{future}!
+\end{frame}
+
+\begin{frame}{Pro and Contra}
+  The good parts:
+
+  \begin{itemize}
+  \item The build-in scheduler decides on the number of threads to use.
+  \item A thread that is blocked by \lstinline{touch} is de-scheduled until the \lstinline{touch}ed \lstinline{future} is done, no locking, spinning etc.
+  \item As a result, we do not have to manually decide \textbf{how} to split up work across hardware threads.
+  \end{itemize}
+
+  \pause{}
+
+  The bad parts:
+  \begin{itemize}
+  \item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
+  \item If the tree is not balanced, we lose parallelism.
+  \item Maybe we spawn \textbf{excessively many futures} and put too much strain on the scheduler?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{An Improved Variant}
+If the size of the tree is too small, then the overhead of constructing \lstinline{future}s dominates the run-time cost. We can handle this problem by using lists as leaves instead of scalar values.
+
+\vspace{0.5cm}
+
+We call such a tree a \textbf{Rope}:
+
+\begin{lstlisting}
+(define-type (Ropeof A) (U (Leaf A) (Cat A)))
+(struct (A) Leaf ([as : (Listof A)]))
+(struct (A) Cat  ([l  : (Ropeof A)]
+                  [r  : (Ropeof A)]))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{New Syntax: Recursive Let}
+
+Standard \lstinline{let}:
+\begin{lstlisting}
+(let ([x 1]
+      [y (+ 2 x)])
+  (* y x))
+\end{lstlisting}
+
+\pause{} \vspace{0.25cm}
+
+\textcolor{red}{\texttt{Undefined identifier: x}}
+
+\pause{} \vspace{0.5cm}
+
+Solution: \lstinline{let*}, recursive let-binding:
+
+\begin{lstlisting}
+(let* ([x 1]
+       [y (+ 2 x)])
+  (* y x))
+\end{lstlisting}
+
+Allows bindings to reference one-another.
 \end{frame}
 
 \end{document}
