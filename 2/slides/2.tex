@@ -68,29 +68,18 @@
   The expression's call-tree:
 
   \begin{center}
-    \begin{tikzpicture}[auto]
-      \node[element] (op1) {\lstinline{+}};
-      \node[element, below left of=op1] (c1) {\lstinline{1}};
-      \node[element, below right of=op1] (op2) {\lstinline{+}};
-      \node[element, below left of=op2] (c2) {\lstinline{2}};
-      \node[element, below right of=op2] (op3) {\lstinline{+}};
-      \node[element, below left of=op3] (c3) {\lstinline{3}};
-      \node[element, below right of=op3] (op4) {\lstinline{+}};
-      \node[element, below left of=op4] (c4) {\lstinline{4}};
-      \node[element, below right of=op4] (op5) {\lstinline{+}};
-      \node[element, below left of=op5] (c5) {\lstinline{5}};
-      \node[element, below right of=op5] (c6) {\lstinline{6}};
-
-      \path[line] (op1) to (c1);
-      \path[line] (op1) to (op2);
-      \path[line] (op2) to (c2);
-      \path[line] (op2) to (op3);
-      \path[line] (op3) to (c3);
-      \path[line] (op3) to (op4);
-      \path[line] (op4) to (c4);
-      \path[line] (op4) to (op5);
-      \path[line] (op5) to (c5);
-      \path[line] (op5) to (c6);
+    \begin{tikzpicture}[level distance=0.5cm]
+      \node {\lstinline{+}}
+        child {node {\lstinline{1}}}
+        child {node {\lstinline{+}}
+          child {node {\lstinline{2}}}
+          child {node {\lstinline{+}}
+            child {node {\lstinline{3}}}
+            child {node {\lstinline{+}}
+              child {node {\lstinline{4}}}
+              child {node {\lstinline{+}}
+                child {node {\lstinline{5}}}
+                child {node {\lstinline{6}}}}}}};
     \end{tikzpicture}
   \end{center}
 \end{frame}
@@ -125,33 +114,25 @@ We can re-formulate the expression and obtain the same result!
   The expression's call-tree:
 
   \begin{center}
-    \begin{tikzpicture}[auto]
-      \node[element] (op1) {\lstinline{+}};
-
-      \node[element, below of=op1] (dummy) {};
-
-      \node[element, left of=dummy] (op2) {\lstinline{+}};
-      \node[element, below left of=op2] (c1) {\lstinline{1}};
-      \node[element, below right of=op2] (op3) {\lstinline{+}};
-      \node[element, below left of=op3] (c2) {\lstinline{2}};
-      \node[element, below right of=op3] (c3) {\lstinline{3}};
-
-      \node[element, right of=dummy] (op4) {\lstinline{+}};
-      \node[element, below left of=op4] (c4) {\lstinline{4}};
-      \node[element, below right of=op4] (op5) {\lstinline{+}};
-      \node[element, below left of=op5] (c5) {\lstinline{5}};
-      \node[element, below right of=op5] (c6) {\lstinline{6}};
-
-      \path[line] (op1) to (op2);
-      \path[line] (op1) to (op4);
-      \path[line] (op2) to (c1);
-      \path[line] (op2) to (op3);
-      \path[line] (op3) to (c2);
-      \path[line] (op3) to (c3);
-      \path[line] (op4) to (c4);
-      \path[line] (op4) to (op5);
-      \path[line] (op5) to (c5);
-      \path[line] (op5) to (c6);
+    \begin{tikzpicture}[level distance=.5cm]
+      \tikzstyle{level 1}=[sibling distance=4.8cm]
+      \tikzstyle{level 2}=[sibling distance=2.4cm]
+      \tikzstyle{level 3}=[sibling distance=2.4cm]
+      \node {\lstinline{+}}
+        child {node {\lstinline{+}}
+          child {node {\lstinline{1}}}
+          child {node {\lstinline{+}}
+            child {node {\lstinline{2}}}
+            child {node {\lstinline{3}}}
+          }
+        }
+        child {node {\lstinline{+}}
+          child {node {\lstinline{4}}}
+          child {node {\lstinline{+}}
+            child {node {\lstinline{5}}}
+            child {node {\lstinline{6}}}
+          }
+        };
     \end{tikzpicture}
   \end{center}
 
@@ -171,25 +152,31 @@ We can do this for any function \lstinline{f} iff
 
     \vspace{1cm}
 
-    \begin{tikzpicture}[auto]
-      \node[element] (op1) {\lstinline{f}};
-
-      \node[element, below of=op1] (dummy) {};
-
-      \node[element, left of=dummy] (op2) {\lstinline{f}};
-      \node[element, below left of=op2] (c1) {\dots};
-      \node[element, below right of=op2] (c2) {\dots};
-
-      \node[element, right of=dummy] (op3) {\lstinline{f}};
-      \node[element, below left of=op3] (c3) {\dots};
-      \node[element, below right of=op3] (c4) {\dots};
-
-      \path[line] (op1) to (op2);
-      \path[line] (op1) to (op3);
-      \path[line] (op2) to (c1);
-      \path[line] (op2) to (c2);
-      \path[line] (op3) to (c3);
-      \path[line] (op3) to (c4);
+    \begin{tikzpicture}[level distance=.5cm]
+      \tikzstyle{level 1}=[sibling distance=4.8cm]
+      \tikzstyle{level 2}=[sibling distance=2.4cm]
+      \tikzstyle{level 3}=[sibling distance=1.2cm]
+      \node {\lstinline{f}}
+        child {node {\lstinline{f}}
+          child {node {\lstinline{f}}
+            child {node {\dots}}
+            child {node {\dots}}
+          }
+          child {node {\lstinline{f}}
+            child {node {\dots}}
+            child {node {\dots}}
+          }
+        }
+        child {node {\lstinline{f}}
+          child {node {\lstinline{f}}
+            child {node {\dots}}
+            child {node {\dots}}
+          }
+          child {node {\lstinline{f}}
+            child {node {\dots}}
+            child {node {\dots}}
+          }
+        };
     \end{tikzpicture}
   \end{center}
 \end{frame}
@@ -211,21 +198,14 @@ Mapping a function \lstinline{f} over a \lstinline{cons} list.
 Call-tree of \lstinline{seq-map}:
 
   \begin{center}
-    \begin{tikzpicture}[auto]
-      \node[element] (op1) {\lstinline{cons}};
-      \node[element, below left of=op1] (c1) {\lstinline{(f x0)}};
-      \node[element, below right of=op1] (op2) {\lstinline{cons}};
-      \node[element, below left of=op2] (c2) {\lstinline{(f x1)}};
-      \node[element, below right of=op2] (op3) {\lstinline{cons}};
-      \node[element, below left of=op3] (c3) {\lstinline{(f x2)}};
-      \node[element, below right of=op3] (op4) {\dots};
-
-      \path[line] (op1) to (c1);
-      \path[line] (op1) to (op2);
-      \path[line] (op2) to (c2);
-      \path[line] (op2) to (op3);
-      \path[line] (op3) to (c3);
-      \path[line] (op3) to (op4);
+    \begin{tikzpicture}[level distance=0.75cm]
+      \node {\lstinline{cons}}
+        child {node {\lstinline{(f x0)}}}
+        child {node {\lstinline{cons}}
+          child {node {\lstinline{(f x1)}}}
+          child {node {\lstinline{cons}}
+            child {node {\lstinline{(f x2)}}}
+            child {node {\dots}}}};
     \end{tikzpicture}
   \end{center}
 \end{frame}
@@ -322,7 +302,7 @@ The recursive call is wrapped in a \lstinline{future}!
   The bad parts:
   \begin{itemize}
   \item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
-  \item If the tree is not balanced, we lose parallelism.
+  \item If the tree is not balanced, we lose parallelism -- mitigate by balancing algorithm!
   \item Maybe we spawn \textbf{excessively many futures} and put too much strain on the scheduler?
   \end{itemize}
 \end{frame}
@@ -340,6 +320,13 @@ We call such a tree a \textbf{Rope}:
 (struct (A) Cat  ([l  : (Ropeof A)]
                   [r  : (Ropeof A)]))
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Ropes: Trees With Lists as Leaves}
+  \begin{center}
+    \begin{tikzpicture}[auto]
+    \end{tikzpicture}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{New Syntax: Recursive Let}
