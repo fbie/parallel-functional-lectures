@@ -12,8 +12,8 @@
 
 ;; Also, there is not default reduce function on lists. This is a
 ;; simple implementation of reduce on lists.
-(: reduce (All (A) (-> (-> A A A) (Listof A) A)))
-(define (reduce f as)
+(: list-reduce (All (A) (-> (-> A A A) (Listof A) A)))
+(define (list-reduce f as)
   (assert (not (null? as)))
   (foldl f (car as) (cdr as)))
 
@@ -105,7 +105,7 @@
 (: rope-reduce (All (A) (-> (-> A A A) (Ropeof A) A)))
 (define (rope-reduce f rope)
   (match rope
-    [(Leaf as) (reduce f as)] ;; Base case, reduce the leaf list to a single value.
+    [(Leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list to a single value.
     [(Cat l r) (f (rope-reduce f l) (rope-reduce f r))])) ;; Reduce left and right part and merge results.
 
 ;; The same as rope-map but runs in parallel!
@@ -121,7 +121,7 @@
 (: rope-preduce (All (A) (-> (-> A A A) (Ropeof A) A)))
 (define (rope-preduce f rope)
   (match rope
-    [(Leaf as) (reduce f as)] ;; Base case, reduce the leaf list.
+    [(Leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list.
     [(Cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))  ;; Start a future for the left part.
                      (r0 (future (lambda () (rope-preduce f r))))] ;; Start a future for the right part.
                  (f (touch l0) (touch r0)))])) ;; Await futures and merge the results using f.
