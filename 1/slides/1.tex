@@ -308,7 +308,7 @@ You cannot change a variable's value. Instead, use \textbf{recursion}:
 \begin{lstlisting}
 (: is-even? (-> Integer Boolean))
 (define (is-even? n)
-  (if (< 0 n)
+  (if (< 1 n)
       (is-even? (- n 2))
       (= n 0)))
 \end{lstlisting}
@@ -331,11 +331,26 @@ Now, we can call the function:
 \begin{frame}[fragile]{The Same Program in Java}
 \begin{lstlisting}[style=Java]
 public static bool isEven(int n) {
-  while (0 < n)
+  while (1 < n)
     n = n - 2;
   return n == 0;
 }
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Pattern Matching}
+In functional languages, you can \textbf{decompose} values and structs using the \lstinline{match} construct. This is called \textbf{pattern matching}.
+
+\begin{lstlisting}
+(: is-even? (-> Integer Boolean))
+(define (is-even? n)
+  (match n
+    [0 #t]
+    [1 #f]
+    [_ (is-even? (- n 2))]))
+\end{lstlisting}
+
+\lstinline{_} means ``any other value''. It must always come last!
 \end{frame}
 
 \begin{frame}[fragile]{Anonymous Functions}
