@@ -3,8 +3,6 @@
 ;; Script for Programming Languages Seminar at UCAS, spring 2016.
 ;; For questions or feedback, please e-mail me at fbie@itu.dk.
 
-(require typed/racket)
-
 ;; Racket is a Scheme-dialect. In Scheme, all expressions are lists.
 ;; A list is interpreted as a function call, if the first element of
 ;; the list is a function.
@@ -27,9 +25,8 @@
 (add-one 42) ;; Evaluates to 43.
 (add-one 23) ;; Evaluates to 24.
 
-;; Q: How would you write a function times-two?
-
-;; Q: Functions also have types. What type does add-one have?
+;; Functions also have types. What type does add-one have? We can
+;; easily find out.
 
 add-one
 
@@ -66,20 +63,20 @@ add-one
 
 (: is-even? (-> Integer Boolean))
 (define (is-even? n)
-  (if (< 0 n)
+  (if (< 1 n)
       (is-even? (- n 2))
       (= n 0)))
 
-;; Q: What does this function do? How does it do it?
-
 (is-even? 42)
 (is-even? 23)
+
+;; A more classical example of recursion: the Fibonacci sequence.
 
 (: fib (-> Integer Integer))
 (define (fib n)
   (if (< n 1)
       1 ;; Nothing to do, return 1.
-      (+ (fib (- n 2)) (fib (- n 1))))) ;; Recurse left and right and multiply results.
+      (+ (fib (- n 2)) (fib (- n 1))))) ;; Recurse left and right and sum results.
 
 (fib 1)
 (fib 2)
@@ -101,32 +98,19 @@ add-one
 
 (define-type (Maybe A) (U None (Some A)))
 
-;; Q: What is this type good for?
+;; What is this type good for?
 
-;; A Java approximation of our Maybe type:
-
-;; public static abstract class Maybe<A> {}
-;;
-;; public static class None<A> extends Maybe<A> {
-;;   public None() {}
-;; }
-;;
-;; public static class Some<A> extends Maybe<A> {
-;;   public final A a;
-;;   public Some(A a) {
-;;     this.a = a;
-;;   }
-;; }
-
-;; In Java 8, this is called Optional<T>. The Maybe type is sometimes
+;; See the slide #22 for a Java approximation of our Maybe type. In
+;; Java 8, this is called Optional<T>. The Maybe type is sometimes
 ;; also called option-type, optional or similar. Its constructors are
 ;; sometimes also called Nil instead of None of Just instead of
 ;; Some. The principle remains the same: either the instance has a
 ;; value or doesn't.
 
-;; We can write a divide function, maybe-divide, which
-;; This makes sense when we want to model that a computation failed
-;; without throwing an exception, as in maybe-divide:
+;; We can write a divide function, maybe-divide, which does not fail
+;; if the divisor is zero. This makes sense when we want to model
+;; that a computation failed without throwing an exception, as in
+;; maybe-divide:
 
 (: maybe-divide (-> Real Real (Maybe Real)))
 (define (maybe-divide n d)
@@ -150,6 +134,12 @@ add-one
 (has-value? (maybe-divide 42 23))
 (has-value? (maybe-divide 42 0))
 
+(: maybe-print (All (A) (-> (Maybe A) (Maybe A))))
+(define (maybe-print m)
+  (match m
+    [(None) m]
+    [(Some v) (print v) m]))
+
 ;; This is the definition of a singly-linked list. It is either a
 ;; constructed list or nil, which is the end-element for all lists.
 (define-type (LinkedList A) (U Nil (Cons A)))
@@ -162,25 +152,7 @@ add-one
 (struct (A) Cons ([a : A] [tail : (LinkedList A)])
   #:transparent)
 
-;; Q: What would the Java equivalent of LinkedList look like?
-
-;; A:
-
-;; public abstract class LinkedList<A> {}
-;;
-;; public class Nil<A> extends LinkedList<A> {
-;;   public Nil() {}
-;; }
-;;
-;; public class Cons<A> extends LinkedList<A> {
-;;   public final A a;
-;;   public final LinkedList<A> tail;
-;;   public Cons(A a, LinkedList<A> tail) {
-;;     this.a = a;
-;;     this.tail = tail;
-;;   }
-;; }
-
+;; See slide #25 for a Java approximation of the cons list.
 
 ;; Now, we can put values in our new list.
 
@@ -207,9 +179,7 @@ add-one
 
 ;; Maybe we have two lists that we want to add to each other. That
 ;; happens often. So let's look at how to write an append function for
-;; to lists.
-;;
-;; Q: How would you go about doing that? What are the invariants?
+;; two lists.
 
 (: Append (All (A) (-> (LinkedList A) (LinkedList A) (LinkedList A))))
 (define (Append lhs rhs)
@@ -234,18 +204,13 @@ add-one
 
 (Remove 'b (Cons 'a (Cons 'b (Cons 'c (Nil)))))
 
-;; Q: Do you start seeing a pattern?
-;;
 ;; It seems that we always have to look at two cases:
 ;; - Nil, for when the list is empty. Here, we stop and return a default value.
 ;; - Cons, for when there is at least one element in the list left. We
 ;;     handle the element and then we proceed to the next element of the
 ;;     list, which might be either Nil or again Cons.
 
-;; Q: Implement a function that reverses the order of elements in a
-;; list, such that (Reverse (Cons 'a (Cons 'b (Nil)))) == (Cons 'b
-;; (Cons 'a (Nil))). Hint: You may use Append here.
-
+;; (We may skip list reversal if time is tight.)
 (: Reverse (All (A) (-> (LinkedList A) (LinkedList A))))
 (define (Reverse as)
   (match as
@@ -260,23 +225,14 @@ add-one
 (: get-first (All (A) (-> (LinkedList A) (Maybe A))))
 (define (get-first as)
   (match as
-    [(Nil) (None)]             ;; Nothing there.
-    [(Cons a tail) (Some a)])) ;; Get the first element of the list.
-
-;; Q: What would be a Java equivalent of get-first? Implement it using
-;; the Java-class of Maybe which you saw earlier.
-;;
-;; public class LinkedList<A> {
-;;   ...
-;;   public static Maybe<A> getFirst(LinkedList<A> as) {
-;;     // TODO: Your code here.
-;;   }
+    [(Nil) (None)]          ;; Nothing there.
+    [(Cons a _) (Some a)])) ;; Get the first element of the list.
 
 ;; As it turns out, this is a bit more cumbersome in Java, because you
 ;; need to explicitly check what the "a" field of the LinkedList
 ;; instance is set to.
 
-;; This is a good spot for a break.
+;; (This is a good spot for a break.)
 
 ;; Let us look at higher-order functions in Racket. In Java 8, you
 ;; have lambda expressions, such as:
@@ -331,12 +287,12 @@ add-one
                     (everyone-better-grade tail))])) ;; Continue to the next.
 
 (: students (LinkedList Student))
-(define students (Cons (Student "A" 34)
+(define students (Cons (Student "A" 44)
                        (Cons (Student "B" 80)
                              (Cons (Student "C" 73)
                                    (Nil)))))
 
-;; Uh, oh. You need at least 40% in order to pass in this course...
+;; Uh, oh. You need at least 50% in order to pass in this course...
 ;; Let's make a new list with the same students but better grades!
 (everyone-better-grade students)
 
@@ -370,7 +326,7 @@ add-one
 ;; the list is empty. Or, we have Cons, so there is at least one more
 ;; element which we can apply the function to.
 ;;
-;; Q: Do you think we can generalize this pattern? If so, how?
+;; Can we generalize this pattern?
 ;;
 ;; In functional programming, there are some well known higher-order
 ;; functions that abstract such repeating patterns. One of these is
