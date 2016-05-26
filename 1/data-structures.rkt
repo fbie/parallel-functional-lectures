@@ -112,7 +112,7 @@ add-one
 ;; that a computation failed without throwing an exception, as in
 ;; maybe-divide:
 
-(: maybe-divide (-> Real Real (Maybe Real)))
+(: maybe-divide (-> Number Number (Maybe Number)))
 (define (maybe-divide n d)
   (if (= d 0)
       (None)
@@ -241,7 +241,7 @@ add-one
 ;;
 ;; We can do similar things in Racket:
 
-(: fun (-> Real Real))
+(: fun (-> Number Number))
 (define fun (lambda (n) (* 2 n)))
 
 ;; We can just call this again as usual:
