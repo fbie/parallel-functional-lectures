@@ -1,5 +1,8 @@
 #lang typed/racket
 
+(require/typed future-visualizer
+  [visualize-futures-thunk (All (A) ((-> A) -> A))])
+
 ;; Apparently, typed/racket does not provide a persistent list-set as
 ;; a library function.
 (: list-set (All (A) (-> (Listof A) Integer A (Listof A))))
