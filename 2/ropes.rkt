@@ -49,6 +49,12 @@
           (Cat l r))))
   (rope-init-internal 0 n f))
 
+;; Convenience function to initialize ropes.
+(: rope-init-interval (-> Integer Integer (Ropeof Integer)))
+(define (rope-init-interval n m)
+  (assert (< n m))
+  (rope-init (- m n) (lambda ([x : Integer]) (+ x n))))
+
 ;; Return the value associated with some index i.
 (: rope-ref (All (A) (-> (Ropeof A) Integer A)))
 (define (rope-ref rope i)
