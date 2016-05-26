@@ -43,9 +43,9 @@
   (define (rope-init-internal offset n f)
     (if (<= n max-leaf-length)
         (Leaf (build-list n (lambda ([n : Integer]) (f (+ n offset)))))
-        (let* ([n0 (quotient n 2)]
-               [l (rope-init-internal offset n0 f)]
-               [r (rope-init-internal (+ offset (rope-length l)) (- n (rope-length l)) f)])
+        (letrec ([n0 (quotient n 2)]
+                 [l (rope-init-internal offset n0 f)]
+                 [r (rope-init-internal (+ offset (rope-length l)) (- n (rope-length l)) f)])
           (Cat l r))))
   (rope-init-internal 0 n f))
 
@@ -100,8 +100,8 @@
 (define (rope-fold f state rope)
   (match rope
     [(Leaf as) (foldl f state as)]
-    [(Cat l r) (let* ([state1 (rope-fold f state  l)]  ;; First fold left part.
-                      [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
+    [(Cat l r) (letrec ([state1 (rope-fold f state  l)]  ;; First fold left part.
+                        [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
                  state2)])) ;; Right part is the result, we move from left to right.
 
 ;; Reduce the rope using function f.
