@@ -53,7 +53,7 @@
   }
 }
 
-\title{Lecture notes:\\Functional Programming in Typed Racket}
+\title{Lecture Notes:\\Functional Programming in Typed Racket}
 \author{Florian Biermann \\\small{\texttt{fbie@itu.dk}} \\~}
 
 \date{2016-05-26}
@@ -171,7 +171,7 @@ This is a well-known function:
 
 It contains a conditional. Conditionals have the form \lstinline{(if B ET EF)} where \lstinline{B} is a boolean expression, \lstinline{ET} is the expression that is evaluated if \lstinline{B} evaluates to true (\lstinline{#t}), \lstinline{EF} is the expression that is evaluated if \lstinline{B} evaluates to false (\lstinline{#f}).
 
-In the lecture, I told you that the types of \lstinline{ET} and \lstinline{EF} must be the same. This is true in most functional programming languages. However, Typed Racket is a bit special. Look at this example:
+During the lecture, I told you that the types of \lstinline{ET} and \lstinline{EF} must be the same. This is true in most functional programming languages. However, Typed Racket is a bit special. Look at this example:
 
 \begin{lstlisting}
 (define (funny [b : Boolean])
@@ -200,7 +200,7 @@ Typed Racket features polymorphic types. Polymorphic types in Typed Racket are v
 
 \section{Immutable State and Recursion}
 
-In purely functional languages, you cannot alter the state of the program. You cannot assign to a variable once it has been defined\footnote{Actually, this is possible in Racket, but we pretend that it isn't because it makes a lot of things so much harder.}. Consider this simple Java program:
+In purely functional languages, you cannot alter the state of the program. You cannot assign to a variable once it has been defined\footnote{Actually, this is possible in Racket, but using side-effects makes everything much more complicated.}. Consider this simple Java program:
 
 \begin{lstlisting}[style=Java]
 public static bool isEven(int n) {
@@ -365,11 +365,11 @@ Every list instance contains another, smaller list instance. We call the value o
 Let us see how we can compute the length of a list. We can use pattern-matching:
 
 \begin{lstlisting}
-(: list/length (All (A) (-> (LinkedList A) Integer)))
-(define (list/length as)
+(: list-length (All (A) (-> (LinkedList A) Integer)))
+(define (list-length as)
   (match as
     [(Nil) 0]
-    [(Cons _ tail) (+ 1 (list/length tail))]))
+    [(Cons _ tail) (+ 1 (list-length tail))]))
 \end{lstlisting}
 
 There are two cases: either, the list is empty. In this case, the length is zero. Or the list has at least one element. Then, the length is one plus the length of the \lstinline{tail}. Again, note that we do not care about the value of the \lstinline{Cons} cell.
@@ -377,9 +377,9 @@ There are two cases: either, the list is empty. In this case, the length is zero
 We can easily implement a function to push a new element to the list:
 
 \begin{lstlisting}
-(: list/push (All (A) (-> A (LinkedList A)
+(: list-push (All (A) (-> A (LinkedList A)
                             (LinkedList A))))
-(define (list/push a as)
+(define (list-push a as)
   (Cons a as))
 \end{lstlisting}
 
@@ -388,26 +388,26 @@ It takes constant time and space, because we re-use the old list. Indeed, many l
 Let us look at more functions on lists. For example, we would like to be able to concatenate two lists. We can again implement this conveniently by pattern-matching.
 
 \begin{lstlisting}
-(: list/concat (All (A) (-> (LinkedList A)
+(: list-concat (All (A) (-> (LinkedList A)
                             (LinkedList A)
                             (LinkedList A))))
-(define (list/concat lhs rhs)
+(define (list-concat lhs rhs)
   (match lhs
     [(Nil) rhs]
     [(Cons head tail) (Cons head
-                            (list/concat tail rhs))]))
+                            (list-concat tail rhs))]))
 \end{lstlisting}
 
-Again, we perform case analysis: if the left hand side \lstinline{lhs} is empty, then there is nothing to do and returning whatever is on the right hand side, \lstinline{rhs}, is correct. If however \lstinline{lhs} is not empty, we must add its \lstinline{head} to the new list. How do we construct a new list? By calling \lstinline{list/concat} on its \lstinline{tail}.
+Again, we perform case analysis: if the left hand side \lstinline{lhs} is empty, then there is nothing to do and returning whatever is on the right hand side, \lstinline{rhs}, is correct. If however \lstinline{lhs} is not empty, we must add its \lstinline{head} to the new list. How do we construct a new list? By calling \lstinline{list-concat} on its \lstinline{tail}.
 
 Why is this correct? Because either, \lstinline{tail} is \lstinline{Nil}. In this case, \lstinline{concat} will return \lstinline{rhs}. So we have added \lstinline{head} to \lstinline{rhs}. This is, what we wanted. Or, \lstinline{tail} is not empty. Then we add its current \lstinline{head} to whatever is returned by \lstinline{concat} on its \lstinline{tail}. At some point, there is no \lstinline{tail} left, because lists cannot be infinite (computers have finite memory), and we end up again at the base case.
 
 Note, that this takes $O(n)$ time and space, where $n$ is the length of \lstinline{lhs}. We have to look at every element once but we also have to construct $n$ new cells, because we cannot simply replace the empty list at the very end of \lstinline{lhs} by \lstinline{rhs}: lists are also immutable!
 
-The \lstinline{list/remove} function is a nice example to illustrate sub-list sharing. If we know that an element is inside the list, we can ask \lstinline{list/remove} to remove it:
+The \lstinline{list-remove} function is a nice example to illustrate sub-list sharing. If we know that an element is inside the list, we can ask \lstinline{list-remove} to remove it:
 
 \begin{lstlisting}
-> (list/remove
+> (list-remove
      'c (Cons 'a
               (Cons 'b
                     (Cons 'c
@@ -440,53 +440,153 @@ How does it do that? It simply traverses the list and builds new \lstinline{Cons
 This is the code:
 
 \begin{lstlisting}
-(: list/remove (All (A) (-> A (LinkedList A)
+(: list-remove (All (A) (-> A (LinkedList A)
                               (LinkedList A))))
-(define (list/remove a as)
+(define (list-remove a as)
   (match as
     [(Nil) (Nil)]
-    [(Cons head tail) (if (eq? head a)
-                          tail
-                          (Cons head
-                                (list/remove a tail)))]))
+    [(Cons head tail)
+       (if (eq? head a)
+           tail
+           (Cons head
+           (list-remove a tail)))]))
 \end{lstlisting}
 
 \section{Higher-Order Functions on Lists}
 
+Often times, we want to perform the same computation for all values that are stored in a container, such as a list. In functional programming, this can easily be done by using higher-order functions. We have already seen higher order functions for the \lstinline{Maybe} type.
+
+The function that allows us to apply the same function to all elements of a list is typically called \lstinline{map}, because it maps some function to all values that the list contains. If we had no higher-order functions, we would need to write a new function that explicitly traverses the list, every time that we want to modify all list elements. \lstinline{map} makes this unnecessary, because \lstinline{map} rather focuses on the \emph{shape of the data structure} than on whatever function will be executed.
+
+This is our code for \lstinline{map}:
+
 \begin{lstlisting}
-(: list/map (All (A B) (-> (-> A B)
+(: list-map (All (A B) (-> (-> A B)
                            (LinkedList A)
                            (LinkedList B))))
-(define (list/map f as)
+(define (list-map f as)
   (match as
     [(Nil) (Nil)]
     [(Cons head tail) (Cons (f head)
-                            (list/map f tail))]))
+                            (list-map f tail))]))
 \end{lstlisting}
 
+\lstinline{map} does not care what the function \lstinline{f} does, as long as it is of type \lstinline{(-> A B)}. It is perfectly valid for \lstinline{A} and \lstinline{B} to be of the same type. Therefore, we could use a function \lstinline{f} of type \lstinline{(-> Integer Integer)}.
+
+Here is the example from the lecture: a list of students and a function \lstinline{better-grade} that increases the grade of a student by 10\%:
+
 \begin{lstlisting}
-(: list/filter (All (A) (-> (-> A Boolean)
-                            (LinkedList A)
-                            (LinkedList A))))
-(define (list/filter p as)
-  (match as
+(struct Student ([name : String]
+                 [grade : Integer]))
+
+(define students
+        (Cons (Student "A" 89)
+              (Cons (Student "B" 44)
+                    (Cons (Student "C" 62) (Nil)))))
+
+(: better-grade (-> Student Student))
+(define (better-grade student)
+  (Student (Student-name student)
+           (+ 10 (Student-grade student))))
+\end{lstlisting}
+
+Recall that we can access any field of a struct by calling a function that is named after the pattern \texttt{<struct-name>-<field-name>}. We can now either write a new function that applies \lstinline{better-grade} to every student in a list of students, or we use \lstinline{map} to do so. Here are both variants:
+
+\begin{lstlisting}
+(: everyone-better-grade (-> (LinkedList Student)
+                             (LinkedList Student)))
+(define (everyone-better-grade students)
+  (match students
     [(Nil) (Nil)]
-    [(Cons head tail) (if (p head)
-                          (list/filter p tail)
-                          (Cons head
-                                (list/filter p tail)))]))
+    [(Cons student tail)
+       (Cons (better-grade student)
+             (everyone-better-grade tail))]))
 \end{lstlisting}
 
+Note the similarity between \lstinline{everyone-better-grade} and \lstinline{list-map}.
+
 \begin{lstlisting}
-(: list/fold (All (A B) (-> (-> B A B)
+> (everyone-better-grade students)
+- : (U Nil (Cons Student))
+(Cons (Student "A" 99)
+      (Cons (Student "B" 54)
+            (Cons (Student "C" 72) #<Nil>)))
+
+> (list-map better-grade students)
+- : (U Nil (Cons Student))
+(Cons (Student "A" 99)
+      (Cons (Student "B" 54)
+            (Cons (Student "C" 72) #<Nil>)))
+\end{lstlisting}
+
+The result is the same, but we only have to write \lstinline{map} once and we can use it on any type of list with any type of function (as long as the functions type is a specialization of the most general type \lstinline{(-> A B)} or $A \, -> \, B$).
+
+If we now want to compute the average of all grades for the course, we need to write a function that first extracts all grades from the students and then adds them together and then finally divides the sum of all grades by the number of students in the course. We could use the following code to get all grades:
+
+\begin{lstlisting}
+> (list-map Student-grade students)
+- : (U Nil (Cons Integer))
+(Cons 89 (Cons 44 (Cons 62 #<Nil>)))
+\end{lstlisting}
+
+How do we sum up the resulting grades? We could write a simple sum function, but after we now have learned that we can use higher-order functions to implement re-usable solutions, maybe we can find a way to implement such a function to compute sums. Indeed, such functions exist and one of them is called \lstinline{fold}. It takes a function of type \lstinline{(-> B A B)}, a state parameter of type \lstinline{B} and an input list of type \lstinline{LinkedList A}:
+
+\begin{lstlisting}
+(: list-fold (All (A B) (-> (-> B A B)
                             B
                            (LinkedList A) B)))
-(define (list/fold f state as)
+(define (list-fold f state as)
   (match as
     [(Nil) state]
-    [(Cons head tail) (list/fold f
+    [(Cons head tail) (list-fold f
                                  (f state head)
                                  tail)]))
+\end{lstlisting}
+
+\lstinline{state} is a parameter that carries the result from the last computation to the next recursive step. We have to initialize it in some way to make sure that we get an answer in case that the input list is empty. Let's try to fold the list of grades with \lstinline{+} (which is of type \lstinline{(-> Integer Integer Integer)} and therefore matches \lstinline{fold}'s type requirement) and see what happens:
+
+\begin{lstlisting}
+> (list-fold + 0 (list-map Student-grade students))
+- : Integer
+195
+\end{lstlisting}
+
+We start with zero as the initial state and add every student grade to state. Try, by hand, to take the \lstinline{+} operator, the initial state and the list of grades and to place them in the definition of \lstinline{fold} and see what happens at each step!
+
+Our final function to compute the average of the course could look like this:
+
+\begin{lstlisting}
+(: course-average (-> (LinkedList Student) Integer))
+(define (course-average students)
+  (/ (list-fold + 0 (list-map Student-grade students))
+     (list-length students)))
+\end{lstlisting}
+
+This is a very concise way of writing this a function, thanks to the higher-order functions we have defined.
+
+Finally, we want to only keep students in the list that have passed the course. Again, we can either write a new function that decomposes the list step by step or we write a higher-order function that removes all elements of a list for which a certain predicate \lstinline{p} holds. Predicates are always of the type \lstinline{(-> A Boolean)}. We call this function \lstinline{filter} and we can define it as follows:
+
+\begin{lstlisting}
+(: list-filter (All (A) (-> (-> A Boolean)
+                            (LinkedList A)
+                            (LinkedList A))))
+(define (list-filter p as)
+  (match as
+    [(Nil) (Nil)]
+    [(Cons head tail)
+       (if (p head)
+           (list-filter p tail)
+           (Cons head
+                 (list-filter p tail)))]))
+\end{lstlisting}
+
+The \lstinline{filter} functions follows the same principle as \lstinline{remove}, but it does not stop after the first element it encounters. It keeps going and calls \lstinline{p} for every element of the list until it reaches the end of the list. We can call it using a lambda expression that returns true if a grade is below 50\%:
+
+\begin{lstlisting}
+> (list-filter (lambda ([g : Integer]) (< g 50))
+               (list-map Student-grade students))
+- : (U Nil (Cons Integer))
+(Cons 89 (Cons 62 #<Nil>))
 \end{lstlisting}
 
 \end{document}
