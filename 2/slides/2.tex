@@ -222,7 +222,8 @@ All parallel expressions we saw so far were trees. Maybe we can develop a tree d
 \begin{frame}[fragile]{A New Parallel Data Type}
 We represent the list as a tree instead:
 \begin{lstlisting}
-(define-type (CatListof A) (U (leaf A) (cat A)))
+(define-type (CatListof A) (U (leaf A)
+                              (cat A)))
 (struct (A) leaf ([a : A]))
 (struct (A) cat ([l : (CatListof A)]
                  [r : (CatListof A)]))
