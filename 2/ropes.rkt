@@ -24,6 +24,9 @@
   (assert (not (null? as)))
   (foldl f (car as) (cdr as)))
 
+;; To keep the syntax consistent.
+(define list-filter filter)
+
 ;; This is our rope type.
 (define-type (Ropeof A) (U (leaf A) (cat A)))
 
@@ -132,6 +135,13 @@
     [(cat l r) (f (rope-reduce f l)
                   (rope-reduce f r))])) ;; Reduce left and right part and merge results.
 
+;; Filter the rope using predicate p.
+(: rope-filter (All (A) (-> (-> A Boolean) (Ropeof A) (Ropeof A))))
+(define (rope-filter p rope)
+  (match rope
+    [(leaf as) (leaf (list-filter p as))]
+    [(cat l r) (cat (rope-filter p l)
+                    (rope-filter p r))]))
 
 ;; The same as rope-map but runs in parallel!
 (: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
