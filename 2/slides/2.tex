@@ -225,8 +225,8 @@ We represent the list as a tree instead:
 (define-type (CatListof A) (U (leaf A)
                               (cat A)))
 (struct (A) leaf ([a : A]))
-(struct (A) cat ([l : (CatListof A)]
-                 [r : (CatListof A)]))
+(struct (A) cat  ([l : (CatListof A)]
+                  [r : (CatListof A)]))
 \end{lstlisting}
 
 \pause{} \vspace{.5cm}
