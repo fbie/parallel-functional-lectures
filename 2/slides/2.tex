@@ -377,7 +377,7 @@ The recursive call is wrapped in a \lstinline{future}!
 
   The bad parts:
   \begin{itemize}
-  \pause{} \item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
+  \pause{} \item A list has $O(n)$ memory overhead, a balanced tree $O(n \log n)$.
   \pause{} \item If the tree is not balanced, we lose parallelism -- mitigate by balancing algorithm!
   \pause{} \item Maybe we spawn \textbf{excessively many futures} and put too much strain on the scheduler?
   \end{itemize}
