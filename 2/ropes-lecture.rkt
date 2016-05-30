@@ -13,12 +13,19 @@
                      (cons b as)
                      (cons a (list-set as (- i 1) b)))]))
 
+(: list-fold (All (A B) (-> (-> B A B) B (Listof A) B)))
+(define (list-fold f state as)
+  (foldl (lambda ([a : A] [b : B]) (f b a)) state as))
+
 ;; Also, there is not default reduce function on lists. This is a
 ;; simple implementation of reduce on lists.
 (: list-reduce (All (A) (-> (-> A A A) (Listof A) A)))
 (define (list-reduce f as)
   (assert (not (null? as)))
   (foldl f (car as) (cdr as)))
+
+;; To keep the syntax consistent.
+(define list-filter filter)
 
 ;; This is our rope type.
 (define-type (Ropeof A) (U (leaf A) (cat A)))
