@@ -118,31 +118,6 @@
     [(cat l r) (cat (rope-map f l)
                     (rope-map f r))]))
 
-;; Fold the rope using the function f.
-(: rope-fold (All (A B) (-> (-> B A B) B (Ropeof A) B)))
-(define (rope-fold f state rope)
-  (match rope
-    [(leaf as) (list-fold f state as)]
-    [(cat l r) (letrec ([state1 (rope-fold f state  l)]  ;; First fold left part.
-                        [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
-                 state2)])) ;; Right part is the result, we move from left to right.
-
-;; Reduce the rope using function f.
-(: rope-reduce (All (A) (-> (-> A A A) (Ropeof A) A)))
-(define (rope-reduce f rope)
-  (match rope
-    [(leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list to a single value.
-    [(cat l r) (f (rope-reduce f l)
-                  (rope-reduce f r))])) ;; Reduce left and right part and merge results.
-
-;; Filter the rope using predicate p.
-(: rope-filter (All (A) (-> (-> A Boolean) (Ropeof A) (Ropeof A))))
-(define (rope-filter p rope)
-  (match rope
-    [(leaf as) (leaf (list-filter p as))]
-    [(cat l r) (cat (rope-filter p l)
-                    (rope-filter p r))]))
-
 ;; The same as rope-map but runs in parallel!
 (: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
 (define (rope-pmap f rope)
@@ -152,6 +127,14 @@
                      (r0 (future (lambda () (rope-pmap f r))))] ;; Start a future for the right part.
                  (cat (touch l0) (touch r0)))])) ;; Touch waits for the futures and returns their results.
 
+;; Reduce the rope using function f.
+(: rope-reduce (All (A) (-> (-> A A A) (Ropeof A) A)))
+(define (rope-reduce f rope)
+  (match rope
+    [(leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list to a single value.
+    [(cat l r) (f (rope-reduce f l)
+                  (rope-reduce f r))])) ;; Reduce left and right part and merge results.
+
 ;; The same as rope-reduce but runs in parallel!
 (: rope-preduce (All (A) (-> (-> A A A) (Ropeof A) A)))
 (define (rope-preduce f rope)
@@ -160,3 +143,39 @@
     [(cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))  ;; Start a future for the left part.
                      (r0 (future (lambda () (rope-preduce f r))))] ;; Start a future for the right part.
                  (f (touch l0) (touch r0)))])) ;; Await futures and merge the results using f.
+
+
+;; Filter the rope using predicate p.
+(: rope-filter (All (A) (-> (-> A Boolean) (Ropeof A) (Ropeof A))))
+(define (rope-filter p rope)
+  (match rope
+    [(leaf as) (leaf (list-filter p as))]
+    [(cat l r) (cat (rope-filter p l)
+                    (rope-filter p r))]))
+
+;; The same as rope-filter but runs in parallel!
+(: rope-filter (All (A) (-> (-> A Boolean) (Ropeof A) (Ropeof A))))
+(define (rope-filter p rope)
+  (match rope
+    [(leaf as) (leaf (list-filter p as))]
+    [(cat l r) (let ([pl (future (lambda () (rope-filter p l)))]
+                     [pr (future (lambda () (rope-filter p r)))])
+                 (cat (touch pl) (touch pr)))]))
+
+;; Fold the rope using the function f.
+(: rope-fold (All (A B) (-> (-> B A B) B (Ropeof A) B)))
+(define (rope-fold f state rope)
+  (match rope
+    [(leaf as) (list-fold f state as)] ;; Switch to slides p. 16!
+    [(cat l r) (letrec ([state1 (rope-fold f state  l)]  ;; First fold left part.
+                        [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
+                 state2)])) ;; Right part is the result, we move from left to right.
+
+;; It is not possible to parallelize fold :(
+(: rope-pfold? (All (A B) (-> (-> B A B) B (Ropeof A) B)))
+(define (rope-fold f state rope)
+  (match rope
+    [(leaf as) (list-fold f state as)]
+    [(cat l r) (letrec ([state1 (future (lambda () (rope-fold f state  l)))]
+                        [state2 (future (lambda () (rope-fold f (touch state1) r)))])
+                 state2)]))
