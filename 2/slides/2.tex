@@ -198,6 +198,9 @@ Mapping a function \lstinline{f} over a \lstinline{cons} list.
 \begin{lstlisting}
 (: seq-map (All (A B)
     (-> (-> A B) (Listof A) (Listof B))))
+\end{lstlisting}
+\pause{}
+\begin{lstlisting}
 (define (seq-map f xs)
   (match xs
     ['() '()]
