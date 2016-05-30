@@ -1,0 +1,76 @@
+\documentclass{beamer}
+\usepackage{beamerthemeOerestad}
+\usetheme{Oerestad}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{dirtytalk}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{url}
+\usepackage{semantic}
+\usepackage{tikz}
+\usepackage{todonotes}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=cyan
+}
+
+\lstdefinestyle{Racket}{
+  language=Lisp,
+  basicstyle=\ttfamily,
+  otherkeywords={\#lang,define,match,let,letrec,:,->,lambda,struct,define-type,car,cdr},
+  identifierstyle=\color{pink!60!blue},
+  keywordstyle=\color{blue!50!black},
+  stringstyle=\color{green!50!black},
+  commentstyle=\color{pink!60!black}
+}
+
+\lstdefinestyle{Java}{
+  language=Java,
+  basicstyle=\ttfamily,
+  identifierstyle=\color{orange!40!black},
+  keywordstyle=\color{blue!50!black},
+  stringstyle=\color{green!50!black},
+  commentstyle=\color{blue!50!grey}
+}
+
+\lstset{
+  style=Racket
+}
+
+\usetikzlibrary{shapes, shapes.multipart, chains, positioning}
+\tikzset{cons/.style n args=2{
+    on chain,
+    rectangle split,
+    rectangle split horizontal,
+    rectangle split parts=2,
+    draw,
+    anchor=center,
+    text height=1.5ex,
+    node contents={#1\nodepart{two}#2},
+    join={by ->}
+  }
+}
+
+\title{Higher-Order Functional Programming\\with\\Java 8 Streams}
+\author{Florian Biermann \\\small{\texttt{fbie@itu.dk}} \\~}
+
+\institute{IT University of Copenhagen \& UCAS}
+
+\date{2016-06-02}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage{}
+\end{frame}
+
+\end{document}
