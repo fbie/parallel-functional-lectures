@@ -13,6 +13,10 @@
                      (cons b as)
                      (cons a (list-set as (- i 1) b)))]))
 
+(: list-fold (All (A B) (-> (-> B A B) B (Listof A) B)))
+(define (list-fold f state as)
+  (foldl (lambda ([a : A] [b : B]) (f b a)) state as))
+
 ;; Also, there is not default reduce function on lists. This is a
 ;; simple implementation of reduce on lists.
 (: list-reduce (All (A) (-> (-> A A A) (Listof A) A)))
@@ -111,10 +115,10 @@
     [(cat l r) (cat (rope-map f l) (rope-map f r))]))
 
 ;; Fold the rope using the function f.
-(: rope-fold (All (A B) (-> (-> A B B) B (Ropeof A) B)))
+(: rope-fold (All (A B) (-> (-> B A B) B (Ropeof A) B)))
 (define (rope-fold f state rope)
   (match rope
-    [(leaf as) (foldl f state as)]
+    [(leaf as) (list-fold f state as)]
     [(cat l r) (letrec ([state1 (rope-fold f state  l)]  ;; First fold left part.
                         [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
                  state2)])) ;; Right part is the result, we move from left to right.
