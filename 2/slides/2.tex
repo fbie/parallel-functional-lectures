@@ -477,4 +477,26 @@ Solution: \lstinline{letrec}, recursive let-binding:
 Allows bindings to reference one-another.
 \end{frame}
 
+\begin{frame}[fragile]{De-sugaring Recursive Let}
+
+\begin{lstlisting}
+(letrec ([x 1]
+         [y (+ 2 x)])
+  (* y x))
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+is equal to
+
+\vspace{0.5cm}
+
+\begin{lstlisting}
+(let ([x 1])
+  (let ([y (+ 2 x)])
+    (* y x)))
+\end{lstlisting}
+
+\end{frame}
+
 \end{document}
