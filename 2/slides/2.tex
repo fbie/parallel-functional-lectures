@@ -295,6 +295,9 @@ We represent the list as a tree instead:
 \begin{lstlisting}
 (: par-map (All (A B)
   (-> (-> A B) (CatListof A) (CatListof B))))
+\end{lstlisting}
+\pause{}
+\begin{lstlisting}
 (define (par-map f xs)
   (match xs
     [(leaf x) (leaf (f x))]
