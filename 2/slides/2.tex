@@ -368,18 +368,18 @@ The recursive call is wrapped in a \lstinline{future}!
   The good parts:
 
   \begin{itemize}
-  \item The build-in scheduler decides on the number of threads to use.
-  \item A thread that is blocked by \lstinline{touch} is de-scheduled until the \lstinline{touch}ed \lstinline{future} is done, no locking, spinning etc.
-  \item As a result, we do not have to manually decide \textbf{how} to split up work across hardware threads.
+  \pause{} \item The build-in scheduler decides on the number of threads to use.
+  \pause{} \item A thread that is blocked by \lstinline{touch} is de-scheduled until the \lstinline{touch}ed \lstinline{future} is done, no locking, spinning etc.
+  \pause{} \item As a result, we do not have to manually decide \textbf{how} to split up work across hardware threads.
   \end{itemize}
 
   \pause{}
 
   The bad parts:
   \begin{itemize}
-  \item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
-  \item If the tree is not balanced, we lose parallelism -- mitigate by balancing algorithm!
-  \item Maybe we spawn \textbf{excessively many futures} and put too much strain on the scheduler?
+  \pause{} \item A list has $O(n)$ memory overhead, a tree $O(n \log n)$.
+  \pause{} \item If the tree is not balanced, we lose parallelism -- mitigate by balancing algorithm!
+  \pause{} \item Maybe we spawn \textbf{excessively many futures} and put too much strain on the scheduler?
   \end{itemize}
 \end{frame}
 
