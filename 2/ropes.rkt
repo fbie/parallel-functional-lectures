@@ -21,10 +21,10 @@
   (foldl f (car as) (cdr as)))
 
 ;; This is our rope type.
-(define-type (Ropeof A) (U (Leaf A) (Cat A)))
+(define-type (Ropeof A) (U (Leaf A) (cat A)))
 
 (struct (A) Leaf ([as : (Listof A)]) #:transparent)
-(struct (A) Cat ([l : (Ropeof A)] [r : (Ropeof A)]) #:transparent)
+(struct (A) cat ([l : (Ropeof A)] [r : (Ropeof A)]) #:transparent)
 
 ;; The maximum length of a leaf list.
 (define max-leaf-length 5)
@@ -33,8 +33,8 @@
 (: rope-length (All (A) (-> (Ropeof A) Integer)))
 (define (rope-length rope)
   (match rope
-    [(Leaf as) (length as)]
-    [(Cat l r) (+ (rope-length l) (rope-length r))]))
+    [(leaf as) (length as)]
+    [(cat l r) (+ (rope-length l) (rope-length r))]))
 
 ;; Initialize a rope for a given function.
 (: rope-init (All (A) (-> Integer (-> Integer A) (Ropeof A))))
@@ -42,11 +42,11 @@
   (: rope-init-internal (All (A) (-> Integer Integer (-> Integer A) (Ropeof A))))
   (define (rope-init-internal offset n f)
     (if (<= n max-leaf-length)
-        (Leaf (build-list n (lambda ([n : Integer]) (f (+ n offset)))))
+        (leaf (build-list n (lambda ([n : Integer]) (f (+ n offset)))))
         (letrec ([n0 (quotient n 2)]
                  [l (rope-init-internal offset n0 f)]
                  [r (rope-init-internal (+ offset (rope-length l)) (- n (rope-length l)) f)])
-          (Cat l r))))
+          (cat l r))))
   (rope-init-internal 0 n f))
 
 ;; Convenience function to initialize ropes.
@@ -59,8 +59,8 @@
 (: rope-ref (All (A) (-> (Ropeof A) Integer A)))
 (define (rope-ref rope i)
   (match rope
-    [(Leaf as) (list-ref as i)]
-    [(Cat l r) (if (< i (rope-length l))
+    [(leaf as) (list-ref as i)]
+    [(cat l r) (if (< i (rope-length l))
                     (rope-ref l i)
                     (rope-ref r (- i (rope-length l))))]))
 
@@ -69,16 +69,16 @@
 (: rope-set (All (A) (-> (Ropeof A) Integer A (Ropeof A))))
 (define (rope-set rope i a)
   (match rope
-    [(Leaf as) (Leaf (list-set as i a))]
-    [(Cat l r) (if (< i (rope-length l)) ;; If the index is inside the left rope,
-                   (Cat (rope-set l i a) r) ;; then set in left sub-rope.
-                   (Cat l (rope-set r (- i (rope-length l)) a)))])) ;; Otherwise, set in right sub-rope.
+    [(leaf as) (leaf (list-set as i a))]
+    [(cat l r) (if (< i (rope-length l)) ;; If the index is inside the left rope,
+                   (cat (rope-set l i a) r) ;; then set in left sub-rope.
+                   (cat l (rope-set r (- i (rope-length l)) a)))])) ;; Otherwise, set in right sub-rope.
 
 ;; Concatenate two ropes.
 (: rope-cat (All (A) (-> (Ropeof A) (Ropeof A) (Ropeof A))))
 (define (rope-cat l r)
   ;; TODO: Improve concatenation of short ropes.
-  (Cat l r))
+  (cat l r))
 
 ;; Balance a possibly unbalanced rope.
 (: rope-balance (All (A) (-> (Ropeof A) (Ropeof A))))
@@ -90,23 +90,23 @@
 (: rope-reverse (All (A) (-> (Ropeof A) (Ropeof A))))
 (define (rope-reverse rope)
   (match rope
-    [(Leaf as) (Leaf (reverse as))]
-    [(Cat l r) (Cat (rope-reverse r) (rope-reverse l))]))
+    [(leaf as) (leaf (reverse as))]
+    [(cat l r) (cat (rope-reverse r) (rope-reverse l))]))
 
 ;; Apply a function to each element of a rope and return a rope with
 ;; the resulting values at the corresponding positions.
 (: rope-map (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
 (define (rope-map f rope)
   (match rope
-    [(Leaf as) (Leaf (map f as))]
-    [(Cat l r) (Cat (rope-map f l) (rope-map f r))]))
+    [(leaf as) (leaf (map f as))]
+    [(cat l r) (cat (rope-map f l) (rope-map f r))]))
 
 ;; Fold the rope using the function f.
 (: rope-fold (All (A B) (-> (-> A B B) B (Ropeof A) B)))
 (define (rope-fold f state rope)
   (match rope
-    [(Leaf as) (foldl f state as)]
-    [(Cat l r) (letrec ([state1 (rope-fold f state  l)]  ;; First fold left part.
+    [(leaf as) (foldl f state as)]
+    [(cat l r) (letrec ([state1 (rope-fold f state  l)]  ;; First fold left part.
                         [state2 (rope-fold f state1 r)]) ;; Right part depends on the left part.
                  state2)])) ;; Right part is the result, we move from left to right.
 
@@ -114,23 +114,23 @@
 (: rope-reduce (All (A) (-> (-> A A A) (Ropeof A) A)))
 (define (rope-reduce f rope)
   (match rope
-    [(Leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list to a single value.
-    [(Cat l r) (f (rope-reduce f l) (rope-reduce f r))])) ;; Reduce left and right part and merge results.
+    [(leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list to a single value.
+    [(cat l r) (f (rope-reduce f l) (rope-reduce f r))])) ;; Reduce left and right part and merge results.
 
 ;; The same as rope-map but runs in parallel!
 (: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
 (define (rope-pmap f rope)
   (match rope
-    [(Leaf as) (Leaf (map f as))] ;; Base case, map over the leaf list.
-    [(Cat l r) (let [(l0 (future (lambda () (rope-pmap f l))))  ;; Start a future for the left part.
+    [(leaf as) (leaf (map f as))] ;; Base case, map over the leaf list.
+    [(cat l r) (let [(l0 (future (lambda () (rope-pmap f l))))  ;; Start a future for the left part.
                      (r0 (future (lambda () (rope-pmap f r))))] ;; Start a future for the right part.
-                 (Cat (touch l0) (touch r0)))])) ;; Touch waits for the futures and returns their results.
+                 (cat (touch l0) (touch r0)))])) ;; Touch waits for the futures and returns their results.
 
 ;; The same as rope-reduce but runs in parallel!
 (: rope-preduce (All (A) (-> (-> A A A) (Ropeof A) A)))
 (define (rope-preduce f rope)
   (match rope
-    [(Leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list.
-    [(Cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))  ;; Start a future for the left part.
+    [(leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list.
+    [(cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))  ;; Start a future for the left part.
                      (r0 (future (lambda () (rope-preduce f r))))] ;; Start a future for the right part.
                  (f (touch l0) (touch r0)))])) ;; Await futures and merge the results using f.
