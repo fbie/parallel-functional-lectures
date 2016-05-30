@@ -316,6 +316,9 @@ In Racket we use a fork/join style model of parallel computations. Fork is calle
 \begin{lstlisting}
 (: in-parallel (All (A B C)
   (-> (-> A B) (-> A C) A (Pairof B C))))
+\end{lstlisting}
+\pause{}
+\begin{lstlisting}
 (define (in-parallel f g x)
   (let ([fx (future (lambda () (f x)))]
         [gx (g x)])
