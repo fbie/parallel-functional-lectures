@@ -77,8 +77,17 @@
 ;; Concatenate two ropes.
 (: rope-cat (All (A) (-> (Ropeof A) (Ropeof A) (Ropeof A))))
 (define (rope-cat l r)
-  ;; TODO: Improve concatenation of short ropes.
-  (cat l r))
+  (match (cons l r)
+    [(cons (leaf ls) (leaf rs)) (if (< (+ (length ls) (length rs)) max-leaf-length)
+                                    (leaf (append ls rs))
+                                    (cat l r))]
+    [(cons (leaf ls) (cat (leaf lrs) rs)) (if (< (+ (length ls) (length lrs)) max-leaf-length)
+                                              (cat (leaf (append ls lrs)) rs)
+                                              (cat l r))]
+    [(cons (cat ls (leaf rls)) (leaf rs)) (if (< (+ (length rls) (length rs)) max-leaf-length)
+                                              (cat ls (leaf (append rls rs)))
+                                              (cat l r))]
+    [_ (cat l r)]))
 
 ;; Balance a possibly unbalanced rope.
 (: rope-balance (All (A) (-> (Ropeof A) (Ropeof A))))
