@@ -317,15 +317,16 @@ If the size of the tree is too small, then the overhead of constructing \lstinli
 We call such a tree a \textbf{Rope}:
 
 \begin{lstlisting}
-(define-type (Ropeof A) (U (Leaf A) (Cat A)))
-(struct (A) Leaf ([as : (Listof A)]))
-(struct (A) Cat  ([l  : (Ropeof A)]
+(define-type (Ropeof A) (U (leaf A)
+                           (cat A)))
+(struct (A) leaf ([as : (Listof A)]))
+(struct (A) cat  ([l  : (Ropeof A)]
                   [r  : (Ropeof A)]))
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}{Ropes: Trees With Lists as Leaves}
-  We must define a \textbf{maximum size} $s_{\max}$for leaves. In this example, $s_{\max}\,=\,3$:
+  We must define a \textbf{maximum size} $s_{\max}$ for leaves. In this example, $s_{\max}\,=\,3$:
 
   \begin{center}
     \begin{tikzpicture}[level distance=0.75cm]
