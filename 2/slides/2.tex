@@ -42,9 +42,19 @@
   style=Racket
 }
 
-\usetikzlibrary{shapes}
-\tikzstyle{element} = [text centered, node distance=1.2cm]
-\tikzstyle{line} = [-, draw]
+\usetikzlibrary{shapes, shapes.multipart, chains, positioning}
+\tikzset{cons/.style n args=2{
+    on chain,
+    rectangle split,
+    rectangle split horizontal,
+    rectangle split parts=2,
+    draw,
+    anchor=center,
+    text height=1.5ex,
+    node contents={#1\nodepart{two}#2},
+    join={by ->}
+  }
+}
 
 \title{Parallel Computations\\ on\\ Immutable Data Structures}
 \author{Florian Biermann \\\small{\texttt{fbie@itu.dk}} \\~}
@@ -212,11 +222,23 @@ Expression tree of \lstinline{seq-map}:
 \end{frame}
 
 \begin{frame}{What Is The Problem?}
-  \lstinline{seq-map} is not the problem. It is the only way to handle a \lstinline{cons} list. \textbf{The real problem is the single-linked list!} It is inherently sequential.
+  \lstinline{seq-map} is not the problem. It is the only way to handle a \lstinline{cons} list. \textbf{The real problem is the single-linked list!} It is inherently sequential:
 
-\pause{} \vspace{1cm}
+\pause{} \vspace{0.5cm}
 
-All parallel expressions we saw so far were trees. Maybe we can develop a tree data structure that we can use to implement a parallel version of \lstinline{map}?
+\begin{center}
+  \begin{tikzpicture}[start chain=going right]
+    \node (a) [cons={\lstinline{'a}}{}];
+    \node (b) [cons={\lstinline{'b}}{}];
+    \node (c) [cons={\lstinline{'c}}{}];
+    \node (d) [cons={\lstinline{'d}}{}];
+    \node (e) [cons={\lstinline{'e}}{$\emptyset$}];
+  \end{tikzpicture}
+\end{center}
+
+\pause{} \vspace{0.5cm}
+
+The parallel expressions we have seen so far are \emph{trees}. Maybe we can develop a tree data structure that we can use to implement a parallel version of \lstinline{map}?
 \end{frame}
 
 \begin{frame}[fragile]{A New Parallel Data Type}
