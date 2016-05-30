@@ -21,9 +21,9 @@
   (foldl f (car as) (cdr as)))
 
 ;; This is our rope type.
-(define-type (Ropeof A) (U (Leaf A) (cat A)))
+(define-type (Ropeof A) (U (leaf A) (cat A)))
 
-(struct (A) Leaf ([as : (Listof A)]) #:transparent)
+(struct (A) leaf ([as : (Listof A)]) #:transparent)
 (struct (A) cat ([l : (Ropeof A)] [r : (Ropeof A)]) #:transparent)
 
 ;; The maximum length of a leaf list.
