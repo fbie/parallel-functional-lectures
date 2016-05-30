@@ -35,3 +35,9 @@
     [(cat l r) (let ([l0 (future (lambda () (par-map f l)))]
                      [r0 (future (lambda () (par-map f r)))])
                    (cat (touch l0) (touch r0)))]))
+
+;; Compose two functions f and g such that we first apply f and then g
+;; to the argument.
+(: compose (All (A B C) (-> (-> A B) (-> B C) (-> A C))))
+(define (compose f g)
+  (lambda (a) (g (f a))))
