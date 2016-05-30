@@ -112,7 +112,8 @@
 (define (rope-map f rope)
   (match rope
     [(leaf as) (leaf (map f as))]
-    [(cat l r) (cat (rope-map f l) (rope-map f r))]))
+    [(cat l r) (cat (rope-map f l)
+                    (rope-map f r))]))
 
 ;; Fold the rope using the function f.
 (: rope-fold (All (A B) (-> (-> B A B) B (Ropeof A) B)))
@@ -128,7 +129,9 @@
 (define (rope-reduce f rope)
   (match rope
     [(leaf as) (list-reduce f as)] ;; Base case, reduce the leaf list to a single value.
-    [(cat l r) (f (rope-reduce f l) (rope-reduce f r))])) ;; Reduce left and right part and merge results.
+    [(cat l r) (f (rope-reduce f l)
+                  (rope-reduce f r))])) ;; Reduce left and right part and merge results.
+
 
 ;; The same as rope-map but runs in parallel!
 (: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
