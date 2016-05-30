@@ -338,15 +338,27 @@ Racket has a built-in scheduler for \lstinline{future}s, so we give a lot of con
 \begin{lstlisting}
 (: par-map (All (A B)
   (-> (-> A B) (CatListof A) (CatListof B))))
+\end{lstlisting}
+\pause{}
+\begin{lstlisting}
 (define (par-map f xs)
   (match xs
     [(leaf x) (leaf (f x))]
+\end{lstlisting}
+\pause{} \vspace{-0.5cm}
+\begin{lstlisting}
     [(cat l r)
-       (let ([l0 (future ;; Map l in parallel.
+       (let ([fl (future ;; Map l in parallel.
                    (lambda () (par-map f l)))]
-             [r0 (future ;; Map r in parallel.
+\end{lstlisting}
+\pause{} \vspace{-0.5cm}
+\begin{lstlisting}
+             [fr (future ;; Map r in parallel.
                    (lambda () (par-map f r)))])
-         (cat (touch l0) (touch r0)))]))
+\end{lstlisting}
+\pause{} \vspace{-0.4cm}
+\begin{lstlisting}
+         (cat (touch fl) (touch fr)))]))
 \end{lstlisting}
 
 The recursive call is wrapped in a \lstinline{future}!
