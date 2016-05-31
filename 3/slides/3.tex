@@ -30,7 +30,8 @@
   identifierstyle=\color{pink!60!blue},
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
-  commentstyle=\color{pink!60!black}
+  commentstyle=\color{pink!60!black},
+  showstringspaces=false
 }
 
 \lstdefinestyle{Java}{
@@ -39,11 +40,12 @@
   identifierstyle=\color{orange!40!black},
   keywordstyle=\color{blue!50!black},
   stringstyle=\color{green!50!black},
-  commentstyle=\color{blue!50!grey}
+  commentstyle=\color{blue!70!gray},
+  showstringspaces=false
 }
 
 \lstset{
-  style=Racket
+  style=Java
 }
 
 \usetikzlibrary{shapes, shapes.multipart, chains, positioning}
@@ -71,6 +73,330 @@
 
 \begin{frame}
   \titlepage{}
+\end{frame}
+
+\begin{frame}{Today's Plan}
+  We will be looking at (parallel) higher order functional programming in Java.
+
+  \begin{itemize}
+  \pause{} \item Brief review of Java's anonymous inner classes.
+  \pause{} \item Java 8 lambda expressions.
+  \pause{} \item Java 8 functional interfaces.
+  \pause{} \item Higher-order functional programming using lazy streams.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java 7 Anonymous Inner Classes}
+
+In Java, you can instantiate new classes on the fly:
+
+\begin{lstlisting}
+Runnable r =
+  new Runnable() {
+    public void run() {
+      System.out.println("Inner class.");
+    }};
+r.run(); // "Inner class."
+\end{lstlisting}
+
+\pause{} \vspace{0.25cm}
+
+They can access global variables iff these are marked \lstinline{final}:
+
+\begin{lstlisting}
+final String s = "This is final!";
+Runnable r = new Runnable() {
+    public void run() {
+      System.out.println(s);
+    }};
+r.run(); // "This is final!";
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Runnable Is Just an Interface}
+
+\begin{lstlisting}
+public interface Runnable {
+  public void run();
+}
+\end{lstlisting}
+
+\pause{} \vspace{0.25cm}
+
+There are other useful interfaces, e.g. \lstinline{Callable<V>} from \lstinline{java.util.concurrent}:
+
+\begin{lstlisting}
+public interface Callable<V> {
+  public V call();
+}
+\end{lstlisting}
+\pause{}
+\begin{lstlisting}
+final String s = "Callable.";
+Callable<String> c = new Callable<String>() {
+    public String call() {
+      return s;
+    }};
+System.out.println(c.call()); // "Callable."
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Why Anonymous Inner Classes?}
+  The Java answer to closures.
+
+  \begin{itemize}
+  \pause{} \item Whenever we want to start a thread, we pass it a new instance of \lstinline{Runnable}.
+  \pause{} \item Short-running tasks, only used once.
+  \pause{} \item Methods in Java are no \emph{first-class citizens}, but objects are.
+  \pause{} \item Anonymous inner classes are a \emph{work-around} for this problem.
+  \pause{} \item The syntax is ugly and hard to read, so Java 8 introduces \emph{lambda expressions.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Our First Java 8 Lambda Expression}
+
+Equal to instantiating an anonymous \lstinline{Runnable}:
+\begin{lstlisting}
+Runnable r =
+  () -> { System.out.println("Lambda."); } ;
+\end{lstlisting}
+
+\pause{} We call this \emph{syntactic sugar}.
+
+\pause{} \vspace{0.5cm} No closing braces required if only one statement:
+\begin{lstlisting}
+Runnable r =
+  () -> System.out.println("Lambda.");
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Our Second Java 8 Lambda Expression}
+
+Equal to instantiating an anonymous \lstinline{Callable<String>}:
+\begin{lstlisting}
+Callable<String> c =
+  () -> { return "Lambda."; };
+\end{lstlisting}
+
+\pause{} \vspace{0.5cm} No \lstinline{return} statement required if only one statement:
+\begin{lstlisting}
+Callable<String> c = () -> "Lambda.";
+\end{lstlisting}
+
+\pause{} \vspace{0.5cm} Compare to Typed Racket, also no \lstinline{return} statement:
+\begin{lstlisting}[style=Racket]
+(lambda () "Lambda.")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{This Is Illegal}
+\begin{lstlisting}
+Callable<String> c =
+  () -> {
+    System.out.println("Callable.call()");
+    "Lambda.";
+  };
+\end{lstlisting}
+
+\pause{}
+
+{\color{red!70!black}
+\begin{verbatim}
+error: not a statement
+        "Lambda.";};
+        ^
+\end{verbatim}}
+
+\pause{}
+
+\textbf{Rules:}
+\begin{itemize}
+  \pause{} \item If you use more than one statement then you must use curly braces.
+  \pause{} \item If you use curly braces then you \emph{must} use \lstinline{return} (except for \lstinline{void} functions).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Java Inner Classes Summary}
+The important points until here:
+
+\begin{itemize}
+\pause{} \item Inner classes always implement an interface (or an abstract class).
+\pause{} \item There are two important interfaces already defined in Java 7.
+\pause{} \item In Java 8, you can use \emph{lambda expressions} instead of inner classes.
+\pause{} \item But what about more interesting functions that also take parameter arguments?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Defining Your Own Functional Interfaces}
+A function of type \lstinline{int} $->$ \lstinline{String}:
+\begin{lstlisting}
+public interface StringToInt {
+  public int apply(String s);
+}
+\end{lstlisting}
+
+\pause{} Now, we can instantiate such a function using a lambda expression:
+\begin{lstlisting}
+StringToInt parseToInt =
+  s -> Integer.parseInt(s);
+\end{lstlisting}
+
+\begin{itemize}
+\pause{} \item Lambda expressions \textbf{have no types themselves!}
+\pause{} \item Instead, they have a \emph{target function type}.
+\pause{} \item Without target function type, the lambda expression does not work.
+\pause{} \item Here, one target type is \lstinline{StringToInt}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java 8 Functional Interfaces}
+No need to define your own interfaces all the time. \lstinline{java.util.function} contains \emph{many} different functional interfaces:
+
+\pause{}\begin{lstlisting}
+Function<String, String> toUpperCase =
+  s -> s.toUpperCase();
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+Predicate<String> isEmpty =
+  s -> s.isEmpty();
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+Consumer<String> print =
+  s -> System.out.println(s);
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+Supplier<String> genString =
+  () -> "Nihao.";
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+ToIntFunction<String> parseToInt =
+  s -> Integer.parseInt(s);
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Function References}
+This is redundant syntax:
+\begin{lstlisting}
+ToIntFunction<String> parseToInt =
+  s -> Integer.parseInt(s);
+\end{lstlisting}
+
+\pause{} We call a function that has the same type as the target function type, \lstinline{String} $->$ \lstinline{int}. Instead, we can use a \emph{function reference}: \pause{}
+
+\begin{lstlisting}
+ToIntFunction<String> parseToInt =
+  Integer::parseInt;
+\end{lstlisting}
+
+This makes the code much more concise!
+\end{frame}
+
+\begin{frame}[fragile]{Java 8 Streams}
+Streams in Java 8 are lazy collections of values:
+
+\begin{lstlisting}
+Stream<Student> students =
+  Stream.of(new Student("A", 89),
+            new Student("B", 44),
+            new Student("C", 62));
+\end{lstlisting}
+
+\pause{} We can map over streams:
+
+\begin{lstlisting}
+students.map(s -> s.improveGrade(10));
+\end{lstlisting}
+
+\begin{itemize}
+\pause{} \item Functional: \lstinline{map} produces a new \lstinline{Stream<Student>} instance!
+\pause{} \item Lazy: the computation is not executed but saved for later.
+\pause{} \item Requires a \emph{terminal operation} to trigger computation.
+\end{itemize}
+
+\pause{}
+
+\begin{lstlisting}
+students
+  .map(s -> s.improveGrade(10))
+  .forEach(System.out::println);
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{What is Laziness?}
+Deferring computation until required.
+
+\begin{lstlisting}
+public class Lazy<T> implements Supplier<T> {
+  private final Supplier<T> f;
+  private volatile T t;
+
+  public Lazy(Supplier<T> f) {
+    this.f = f;
+  }
+
+  public T get() {
+    if (t == null)
+      t = f.get();
+    return t;
+  }}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{How Does Laziness Help?}
+Laziness allows the \lstinline{Stream} implementation to \emph{fuse} successive applications of \lstinline{map}. This is an in-place mapping:
+
+\begin{lstlisting}
+  for (int i = 0; i < students.length; ++i)
+    students[i] = f(students[i]);
+  for (int i = 0; i < students.length; ++i)
+    students[i] = g(students[i]);
+\end{lstlisting}
+
+\pause{} This is what loop fusion does:
+\begin{lstlisting}
+  for (int i = 0; i < students.length; ++i)
+    students[i] = g(f(students[i]));
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Computing Number of Primes}
+The Java 7 way:
+\begin{lstlisting}
+long count = 0;
+for (long p = 0; p < n; ++p)
+  if (isPrime(p)) ++count;
+\end{lstlisting}
+
+\pause{} Java 8 Streams:
+\begin{lstlisting}
+LongStream.range(0, n)
+  .filter(p -> isPrime(p))
+  .count();
+\end{lstlisting}
+
+\pause{} Parallel streams:
+\begin{lstlisting}
+LongStream.range(0, n)
+  .parallel()
+  .filter(p -> isPrime(p))
+  .count();
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Java Streams Overview}
+  Java streams are a great tool:
+  \begin{itemize}
+  \item Very well implemented interface.
+  \item Easy to use when you are used to functional programming.
+  \item Easy to parallelize (\lstinline{.parallel()}).
+  \end{itemize}
+
+  \pause{} But the downsides\dots{}
+  \begin{itemize}
+  \item Sometimes, performance is unpredictable because of laziness.
+  \item OBS: Functions with side-effects will break!
+  \end{itemize}
+
 \end{frame}
 
 \end{document}
