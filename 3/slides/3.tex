@@ -351,6 +351,22 @@ students
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{Collector Classes}
+  \begin{itemize}
+  \item How can we compute the average grade of the class?
+  \pause{} \item Using \lstinline{map} and \lstinline{count} takes $2n$ work and the stream can only be used once, so not an option!
+  \pause{} \item Instead, use pre-defined \lstinline{Collector}:
+  \end{itemize}
+
+  \begin{lstlisting}
+students
+  .collect(Collectors
+    .averagingInt((Student s) -> s.grade));
+\end{lstlisting}
+
+There are many different collectors already pre-defined!
+\end{frame}
+
 \begin{frame}[fragile]{What is Laziness?}
 Deferring computation until value is requested.
 
@@ -591,6 +607,4 @@ students
     \textbf{Thank you for your attention!}
   \end{center}
 \end{frame}
-
-
 \end{document}

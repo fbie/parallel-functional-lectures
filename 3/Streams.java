@@ -33,6 +33,10 @@ public class Streams {
     return students.map(s -> s.improveGrade(10));
   }
 
+  public static double courseAverage(Stream<Student> students) {
+    return students.collect(Collectors.averagingInt((Student s) -> s.grade));
+  }
+
   public static void printStudents(Stream<Student> students) {
     students.forEach(System.out::println);
   }
