@@ -502,6 +502,79 @@ students
   You will hopefully find them very useful!
 \end{frame}
 
+\begin{frame}{Projects}
+
+  Please chose a project! You are allowed to work in groups of 2 -- 3 students.
+
+  \begin{description}
+  \pause{} \item[Typing an Untyped Racket Library] Find an untyped Racket library on \url{pkgs.racket-lang.org} and annotate it with types.
+  \pause{} \item[Parallel Immutable Functional Data Structures] Extend the Rope data structure with more functions and parallelize them.
+  \pause{} \item[A Tiny Math Language Implementation] Implement an interpreter and a type checker for a math language with Racket-style syntax.
+  \pause{} \item[Your own idea?] If you have a personal project that you want to work on using Typed Racket or Java 8 Streams, you are very welcome to do so.
+  \end{description}
+\end{frame}
+
+\begin{frame}[fragile]{Typing an Untyped Racket Library}
+  \begin{itemize}
+  \item \url{pkgs.racket-lang.org} is the official library repository for Racket.
+  \pause{} \item Untyped code:
+    \begin{lstlisting}[style=Racket]
+(define (id x) x)
+    \end{lstlisting}
+  \pause{} \item Your task:
+    \begin{lstlisting}[style=Racket]
+(: id (All (A) (-> A A)))
+(define (id x) x)
+    \end{lstlisting}
+  \pause{} \item Please e-mail me which package you want to work on, so that I can check it is not too hard for you.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Parallel Immutable Functional Data Structures}
+  \begin{itemize}
+  \item Last lecture you saw the Rope data structure for parallel programming.
+  \pause{} \item Much more work to be done!
+    \begin{itemize}
+    \item \lstinline[style=Racket]{rope-mapreduce}
+    \item \lstinline[style=Racket]{rope-reverse}
+    \item \lstinline[style=Racket]{rope-forall}
+    \item \lstinline[style=Racket]{rope-exists}
+    \item \lstinline[style=Racket]{rope-scan}
+    \end{itemize}
+  \pause{} \item Parallelize functions that are not parallel.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{A Tiny Math Language Implementation}
+  \begin{itemize}
+  \item In Racket, you can easily implement other languages that look like Racket.
+    \begin{lstlisting}[style=Racket]
+(let (x (neg 1)) (* x x))
+    \end{lstlisting}
+  \pause{} \item You need not to implement the parser.
+  \pause{} \item Tasks:
+    \begin{itemize}
+    \item Implement the interpreter.
+    \item Implement a type checker.
+    \item Maybe implement a compiler?
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Project Descriptions}
+  The project descriptions are available on
+
+  \begin{center}
+    \url{github.com/fbie/parallel-functional-lectures}
+  \end{center}
+
+  Hand-in deadline is
+
+  \begin{center}
+    2016 - 07 - ??
+  \end{center}
+\end{frame}
+
 \begin{frame}{Questions?}
   \begin{center}
     Slides and code available at \url{github.com/fbie/parallel-functional-programming}.
