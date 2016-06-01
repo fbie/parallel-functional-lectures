@@ -332,7 +332,8 @@ Stream<Student> students =
 \pause{} We can map over streams:
 
 \begin{lstlisting}
-students.map(s -> s.improveGrade(10));
+students
+  .map(s -> new Student(s.name, s.grade + 10));
 \end{lstlisting}
 
 \begin{itemize}
@@ -345,7 +346,7 @@ students.map(s -> s.improveGrade(10));
 
 \begin{lstlisting}
 students
-  .map(s -> s.improveGrade(10))
+  .map(s -> new Student(s.name, s.grade + 10))
   .forEach(System.out::println);
 \end{lstlisting}
 \end{frame}
