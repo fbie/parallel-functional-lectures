@@ -17,6 +17,8 @@ The type of ```rope-map-reduce``` is ```(All (A B) (-> (-> A B) (-> B B B) (Rope
   (rope-map-reduce (lambda ([a : A]) a) f rope))
 ```
 
+Furthermore, implement ```rope-back-reduce``` that starts at **the end** of the rope and works backwards to the front! You will need a new function ```list-back-reduce``` to implement this properly.
+
 As a bonus, you can try to implement ```rope-zip-with``` of type:
 
 ```(All (A B C) (-> (-> A B C) (Ropeof A) (Ropeof B) (Ropeof C)))```
@@ -27,7 +29,7 @@ It does not have to be parallel.
 
 Moreover, we want to be able to check whether a predicate (a function of type ```(All (A) (-> A Boolean))```) holds for all or for at least one element of the rope. These functions are called ```rope-for-all``` and ```rope-exists``` and are both of type ```(All (A) (-> (-> A Boolean) (Ropeof A) Boolean))```. Implement these as well and parallelize them. There are different ways to do so, document your choice and implementation.
 
-### Parallel Scan ###
+### Scan ###
 
 To go even further, you can implement a function called ```rope-scan```. Sometimes, *scan* is also called *prefixSums*. It behaves like this:
 
@@ -42,7 +44,7 @@ Its type is:
 (: list-scan (All (A A) (-> (-> A A A) A (Listof A) (Listof A))))
 ```
 
-It seems to be an inherently sequential function such as ```fold```, but this is not entirely true. First, implement this function sequentially, without the use of ```future```s. In order to do this, you must implement your own version of ```list-scan``` first. Then, read this paper on parallelizing prefix-sums computations: [Guy Blelloch: Prefix sums and their applications ](http://repository.cmu.edu/cgi/viewcontent.cgi?article=3017&context=compsci) (sections 1 and 2 only). Try to see whether you can apply what you have learned from reading sections 1 and 2 to parallelize your implementation of ```rope-scan```.
+You may need to implement ```list-scan``` yourselves.
 
 ### Other Requirements ###
 
