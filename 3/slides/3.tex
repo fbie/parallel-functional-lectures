@@ -369,6 +369,18 @@ public class Lazy<T> implements Supplier<T> {
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{Laziness in Action}
+\begin{lstlisting}
+Lazy<String> s = new Lazy<String>(() -> {
+    System.out.println("Calling get()");
+    return "someString";
+  }); // Not yet computed!
+
+String s1 = s.get(); // "Calling get()"
+String s2 = s.get(); // Nothing printed.
+\end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile]{How Does Laziness Help?}
 Laziness allows the \lstinline{Stream} implementation to \emph{fuse} successive applications of \lstinline{map}. This is an in-place mapping:
 
