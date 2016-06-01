@@ -75,6 +75,10 @@ public class FunctionalInterfaces {
     public static Consumer<String> print = s -> System.out.println(s);
     public static Supplier<String> genString = () -> "Nihao.";
     public static ToIntFunction<String> parseToInt = s -> Integer.parseInt(s);
+    public static LongBinaryOperator longMul = (x, y) -> x * y;
+    public static DoubleToIntFunction round = x -> (int)(x + 0.5d);
+    public static IntPredicate isEven = x -> x % 2 == 0;
+    public static IntUnaryOperator abs = n -> Math.abs(n);
     public static ToIntFunction<String> parseToInt2 = Integer::parseInt;
   }
 
