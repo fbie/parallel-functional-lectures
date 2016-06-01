@@ -476,4 +476,30 @@ Stream<Map.Entry<String,Integer>> phones =
 \footnotesize{Modified from \emph{P. Sestoft, Java Precisely, third ed., The MIT Press, Mar. 2016}.}
 \end{frame}
 
+\begin{frame}[fragile]{Conclusion}
+  We have seen:
+
+  \begin{itemize}
+  \pause{} \item Lambda expressions in Java 8.
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+Function<String, String> toUpperCase =
+ s -> s.toUpperCase();
+    \end{lstlisting}
+  \pause{} \item Functional interfaces and how to define your own.
+  \pause{} \item Using streams in Java 8.
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+students.
+  map(s -> new Student(s.name, s.grade + 10));
+    \end{lstlisting}
+  \pause{} \item Using \emph{parallel} streams in Java 8.
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+students
+  .parallel()
+  .map(s -> new Student(s.name, s.grade + 10));
+    \end{lstlisting}
+  \end{itemize}
+  \pause{}
+  You will hopefully find them very useful!
+\end{frame}
+
 \end{document}
