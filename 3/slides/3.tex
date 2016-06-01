@@ -455,15 +455,19 @@ LongStream.range(0, n)
 \begin{frame}[fragile]{Building Streams}
 \begin{lstlisting}
 IntStream is = IntStream.of(2, 3, 5, 7, 11, 13);
-
+IntStream nats = IntStream.iterate(0, x -> x+1);
+\end{lstlisting}
+\pause{} \begin{lstlisting}
 String[] a = { "Haidian", "Gulou", ...};
 Stream<String> beijingNeigbourhoods =
   Arrays.stream(a);
-
+\end{lstlisting}
+\pause{} \begin{lstlisting}
 Collection<String> coll = ...;
 Stream<String> countries =
   coll.stream();
-
+\end{lstlisting}
+\pause{} \begin{lstlisting}
 Map<String,Integer> phoneNumbers = ...;
 Stream<Map.Entry<String,Integer>> phones =
   phoneNumbers.entrySet().stream();
