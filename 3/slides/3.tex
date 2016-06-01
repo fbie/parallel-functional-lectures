@@ -421,6 +421,8 @@ LongStream.range(0, n)
   .filter(p -> isPrime(p))
   .count();
 \end{lstlisting}
+
+\footnotesize{\textbf{Source}: P. Sestoft, Java Precisely, third ed.The MIT Press, Mar. 2016}
 \end{frame}
 
 \begin{frame}{Java Streams Overview}
@@ -436,6 +438,26 @@ LongStream.range(0, n)
   \item Sometimes, performance is unpredictable because of laziness.
   \item OBS: Functions with side-effects will break!
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Streams}
+\begin{lstlisting}
+IntStream is = IntStream.of(2, 3, 5, 7, 11, 13);
+
+String[] a = { "Hoover", "Roosevelt", ...};
+Stream<String> presidents =
+  Arrays.stream(a);
+
+Collection<String> coll = ...;
+Stream<String> countries =
+  coll.stream();
+
+Map<String,Integer> phoneNumbers = ...;
+Stream<Map.Entry<String,Integer>> phones =
+  phoneNumbers.entrySet().stream();
+\end{lstlisting}
+
+\footnotesize{\textbf{Source}: P. Sestoft, Java Precisely, third ed.The MIT Press, Mar. 2016}
 \end{frame}
 
 \end{document}
