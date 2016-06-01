@@ -381,6 +381,9 @@ Lazy<String> s = new Lazy<String>(() -> {
 String s1 = s.get(); // "Calling get()"
 String s2 = s.get(); // Nothing printed.
 \end{lstlisting}
+
+\pause{} \vspace{1cm} \textbf{OBS:} If we use side-effects, this implementation is \textbf{not} thread-safe because \lstinline{Lazy::get} might be called twice.
+
 \end{frame}
 
 \begin{frame}[fragile]{How Does Laziness Help?}
