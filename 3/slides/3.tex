@@ -400,21 +400,21 @@ Laziness allows the \lstinline{Stream} implementation to \emph{fuse} successive 
 \end{frame}
 
 \begin{frame}[fragile]{Computing Number of Primes}
-The Java 7 way:
+For-loop:
 \begin{lstlisting}
 long count = 0;
 for (long p = 0; p < n; ++p)
   if (isPrime(p)) ++count;
 \end{lstlisting}
 
-\pause{} Java 8 Streams:
+\pause{} Sequential stream:
 \begin{lstlisting}
 LongStream.range(0, n)
   .filter(p -> isPrime(p))
   .count();
 \end{lstlisting}
 
-\pause{} Parallel streams:
+\pause{} Parallel stream:
 \begin{lstlisting}
 LongStream.range(0, n)
   .parallel()
