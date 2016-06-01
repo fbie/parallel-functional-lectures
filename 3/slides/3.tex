@@ -266,9 +266,26 @@ Consumer<String> print =
 Supplier<String> genString =
   () -> "Nihao.";
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Primitive Data Type Interfaces}
+To avoid \emph{value boxing} (\lstinline{int} $->$ \lstinline{Integer}), there are special implementations for primitive data types:
+
 \pause{}\begin{lstlisting}
 ToIntFunction<String> parseToInt =
   s -> Integer.parseInt(s);
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+LongBinaryOperator longMul =
+  (x, y) -> x * y;
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+DoubleToIntFunction round =
+  x -> (int)(x + 0.5d);
+\end{lstlisting}
+\pause{}\begin{lstlisting}
+IntPredicate isEven =
+  x -> x % 2 == 0;
 \end{lstlisting}
 \end{frame}
 
