@@ -306,6 +306,18 @@ ToIntFunction<String> parseToInt =
 This makes the code much more concise!
 \end{frame}
 
+\begin{frame}{Functional Interfaces Summary}
+  The important points until here:
+
+  \begin{itemize}
+  \pause{} \item In Java 8, you can use \emph{lambda expressions} instead of inner classes.
+  \pause{} \item You can define your own \emph{target function types} by defining interfaces.
+  \pause{} \item Better: use pre-defined functional interfaces from \lstinline{java.util.function.*}
+  \pause{} \item If you work on primitive data types, use specialized interfaces!
+  \pause{} \item So what can we use these for?
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Java 8 Streams}
 Streams in Java 8 are lazy collections of values:
 
