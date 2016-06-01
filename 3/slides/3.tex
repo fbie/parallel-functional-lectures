@@ -387,7 +387,7 @@ String s2 = s.get(); // Nothing printed.
 \end{frame}
 
 \begin{frame}[fragile]{How Does Laziness Help?}
-Laziness allows the \lstinline{Stream} implementation to \emph{fuse} successive applications of \lstinline{map}. This is an in-place mapping:
+Laziness allows the \lstinline{Stream} implementation to \emph{fuse} successive applications of \lstinline{map}. This is an in-place mapping over an array:
 
 \begin{lstlisting}
   for (int i = 0; i < students.length; ++i)
