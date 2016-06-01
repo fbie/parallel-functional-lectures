@@ -397,6 +397,13 @@ Laziness allows the \lstinline{Stream} implementation to \emph{fuse} successive 
   for (int i = 0; i < students.length; ++i)
     students[i] = g(f(students[i]));
 \end{lstlisting}
+
+\pause{} You can do it manually -- we call it \emph{function composition}:
+\begin{lstlisting}
+  Function<A, B> f = ...;
+  Function<B, C> g = ...;
+  Function<A, C> h = f.andThen(g);
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Computing Number of Primes}

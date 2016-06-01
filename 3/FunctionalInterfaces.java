@@ -82,6 +82,12 @@ public class FunctionalInterfaces {
     public static ToIntFunction<String> parseToInt2 = Integer::parseInt;
   }
 
+  public static class Composition {
+    public static <V, T, S> Function<T, V> compose(Function<T, S> f, Function<S, V> g) {
+      return f.andThen(g);
+    }
+  }
+
   public static void main(String[] args) {
     try {
       Inner.runnable().run();
