@@ -228,6 +228,7 @@ The important points until here:
 \begin{frame}[fragile]{Defining Your Own Functional Interfaces}
 A function of type \lstinline{int} $->$ \lstinline{String}:
 \begin{lstlisting}
+@FunctionalInterface
 public interface StringToInt {
   public int apply(String s);
 }
@@ -425,7 +426,7 @@ LongStream.range(0, n)
 \begin{frame}{Java Streams Overview}
   Java streams are a great tool:
   \begin{itemize}
-  \item Very well implemented interface.
+  \item Very well implemented, highly optimized.
   \item Easy to use when you are used to functional programming.
   \item Easy to parallelize (\lstinline{.parallel()}).
   \end{itemize}
@@ -435,7 +436,6 @@ LongStream.range(0, n)
   \item Sometimes, performance is unpredictable because of laziness.
   \item OBS: Functions with side-effects will break!
   \end{itemize}
-
 \end{frame}
 
 \end{document}
