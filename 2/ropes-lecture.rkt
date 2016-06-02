@@ -102,3 +102,72 @@
                                               (cat ls (leaf (append rls rs)))
                                               (cat l r))]
     [_ (cat l r)]))
+
+
+(: rope-reverse (All (A) (-> (Ropeof A) (Ropeof A))))
+(define (rope-reverse rope)
+  (match rope
+    [(leaf as) (leaf (reverse as))]
+    [(cat l r) (let ([rl (future (lambda () (rope-reverse l)))]
+                     [rr (future (lambda () (rope-reverse r)))])
+                 (cat (touch rr) (touch rl)))]))
+
+(: rope-map (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
+(define (rope-map f rope)
+  (match rope
+    [(leaf as) (leaf (map f as))]
+    [(cat l r) (cat (rope-map f l) (rope-map f r))]))
+
+(: rope-pmap (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
+(define (rope-pmap f rope)
+  (match rope
+    [(leaf as) (leaf (map f as))]
+    [(cat l r) (let [(l0 (future (lambda () (rope-pmap f l))))
+                     (r0 (future (lambda () (rope-pmap f r))))]
+                 (cat (touch l0) (touch r0)))]))
+
+(: rope-reduce (All (A) (-> (-> A A A) (Ropeof A) A)))
+(define (rope-reduce f rope)
+  (match rope
+    [(leaf as) (list-reduce f as)]
+    [(cat l r) (f (rope-reduce f l) (rope-reduce f r))]))
+
+(: rope-preduce (All (A) (-> (-> A A A) (Ropeof A) A)))
+(define (rope-preduce f rope)
+  (match rope
+    [(leaf as) (list-reduce f as)]
+    [(cat l r) (let [(l0 (future (lambda () (rope-preduce f l))))
+                     (r0 (future (lambda () (rope-preduce f r))))]
+                 (f (touch l0) (touch r0)))]))
+
+(: rope-filter (All (A) (-> (-> A Boolean) (Ropeof A) (Ropeof A))))
+(define (rope-filter p rope)
+  (match rope
+    [(leaf as) (leaf (list-filter p as))]
+    [(cat l r) (cat (rope-filter p l) (rope-filter p r))]))
+
+(: rope-pfilter (All (A) (-> (-> A Boolean) (Ropeof A) (Ropeof A))))
+(define (rope-pfilter p rope)
+  (match rope
+    [(leaf as) (leaf (list-filter p as))]
+    [(cat l r) (let [(l0 (future (lambda () (rope-pfilter p l))))
+                     (r0 (future (lambda () (rope-pfilter p r))))]
+                 (cat (touch l0) (touch r0)))]))
+
+(: rope-fold (All (A B) (-> (-> B A B) B (Ropeof A) B)))
+(define (rope-fold f state rope)
+  (match rope
+    [(leaf as) (list-fold f state as)]
+    [(cat l r) (letrec [(lstate (rope-fold f state l))
+                        (rstate (rope-fold f lstate r))]
+                 rstate)]))
+
+(: rope-pfold? (All (A B) (-> (-> B A B) B (Ropeof A) B)))
+(define (rope-pfold f state rope)
+  (match rope
+    [(leaf as) (list-fold f state rope)]
+    [(cat l r) (letrec [(lstate (future (lambda ()
+                                          (rope-pfold? f state l))))
+                        (rstate (future (lambda ()
+                                          (rope-pfold? f (touch lstate) r))))]
+                 (touch rstate))]))
