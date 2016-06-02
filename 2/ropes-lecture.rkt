@@ -46,13 +46,17 @@
 ;; Initialize a rope for a given function.
 (: rope-init (All (A) (-> Integer (-> Integer A) (Ropeof A))))
 (define (rope-init n f)
-  (: rope-init-internal (All (A) (-> Integer Integer (-> Integer A) (Ropeof A))))
+  (: rope-init-internal (All (A) (-> Integer
+                                     Integer
+                                     (-> Integer A)
+                                     (Ropeof A))))
   (define (rope-init-internal offset n f)
     (if (<= n max-leaf-length)
         (leaf (build-list n (lambda ([n : Integer]) (f (+ n offset)))))
         (letrec ([n0 (quotient n 2)]
                  [l (rope-init-internal offset n0 f)]
-                 [r (rope-init-internal (+ offset (rope-length l)) (- n (rope-length l)) f)])
+                 [r (rope-init-internal
+                     (+ offset (rope-length l)) (- n (rope-length l)) f)])
           (cat l r))))
   (rope-init-internal 0 n f))
 
@@ -77,21 +81,24 @@
 (define (rope-set rope i a)
   (match rope
     [(leaf as) (leaf (list-set as i a))]
-    [(cat l r) (if (< i (rope-length l)) ;; If the index is inside the left rope,
-                   (cat (rope-set l i a) r) ;; then set in left sub-rope.
-                   (cat l (rope-set r (- i (rope-length l)) a)))])) ;; Otherwise, set in right sub-rope.
+    [(cat l r) (if (< i (rope-length l))
+                   (cat (rope-set l i a) r)
+                   (cat l (rope-set r (- i (rope-length l)) a)))]))
 
 ;; Concatenate two ropes.
 (: rope-cat (All (A) (-> (Ropeof A) (Ropeof A) (Ropeof A))))
 (define (rope-cat l r)
   (match (cons l r)
-    [(cons (leaf ls) (leaf rs)) (if (< (+ (length ls) (length rs)) max-leaf-length)
+    [(cons (leaf ls) (leaf rs))
+     (if (< (+ (length ls) (length rs)) max-leaf-length)
                                     (leaf (append ls rs))
                                     (cat l r))]
-    [(cons (leaf ls) (cat (leaf lrs) rs)) (if (< (+ (length ls) (length lrs)) max-leaf-length)
+    [(cons (leaf ls) (cat (leaf lrs) rs))
+     (if (< (+ (length ls) (length lrs)) max-leaf-length)
                                               (cat (leaf (append ls lrs)) rs)
                                               (cat l r))]
-    [(cons (cat ls (leaf rls)) (leaf rs)) (if (< (+ (length rls) (length rs)) max-leaf-length)
+    [(cons (cat ls (leaf rls)) (leaf rs))
+     (if (< (+ (length rls) (length rs)) max-leaf-length)
                                               (cat ls (leaf (append rls rs)))
                                               (cat l r))]
     [_ (cat l r)]))
