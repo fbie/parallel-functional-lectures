@@ -63,6 +63,8 @@ TBA
 
 We have a number of practical projects to choose from. You should choose one project in groups of 2 - 3 students, not more and not less.
 
+Hand-in date is **2016-07-13**. Please write around two pages of explanations for your solution (in English) and hand them in by e-mail.
+
 - [Typing an Untyped Racket Library](projects/LibraryTypes.md)
 - [Parallel Immutable Functional Data Structures](projects/ParallelRopes.md)
 - [A Tiny Math Language Implementation With Racket-Style Syntax](projects/MathLang.md)
