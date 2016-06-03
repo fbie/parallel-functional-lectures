@@ -70,6 +70,7 @@ Java 8 streams are lazy, higher-order, declarative programming abstractions and 
 - [Slides](3/slides/3.pdf)
 - [Functional interfaces example code](3/FunctionalInterfaces.java)
 - [Streams example code](3/Streams.java)
+
 ## Projects ##
 
 We have a number of practical projects to choose from. You should choose one project in groups of 2 - 3 students, not more and not less.
