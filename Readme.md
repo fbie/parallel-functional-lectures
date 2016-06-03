@@ -52,7 +52,14 @@ One such way is the *Rope* data structure. A rope is a binary tree with lists (o
 
 #### Content ####
 
-TBA
+We will be looking at (parallel) higher order functional programming in Java.
+
+- Brief review of Java's anonymous inner classes.
+- Java 8 lambda expressions.
+- Java 8 functional interfaces.
+- Higher-order functional programming using lazy streams.
+
+Java 8 streams are lazy, higher-order, declarative programming abstractions and a great tool for data-parallel programming in Java.
 
 #### Reading Material ####
 
