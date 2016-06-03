@@ -46,7 +46,7 @@ One such way is the *Rope* data structure. A rope is a binary tree with lists (o
 - [Herb Sutter: **The Free Lunch is Over**, Dr. Dobb's Journal](http://www.gotw.ca/publications/concurrency-ddj.htm)
 - [Michael Erdmann: **Parallelism, Cost Graphs, and Sequences**, lecture notes](http://www.cs.cmu.edu/~15150/resources/lectures/19/Parallelism.pdf)
 - [Hans-J. Boehm et al.: **Ropes: an Alternative to Strings**](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=02A88073F0332A35BA9A5EA132887B13?doi=10.1.1.14.9450&rep=rep1&type=pdf)
-- [Slides for lecture 2]()
+- [Slides for lecture 2](2/slides/2.pdf)
 
 ## Lecture 3: Java 8 Streams ##
 
@@ -56,7 +56,7 @@ TBA
 
 #### Reading Material ####
 
-- [Slides for lecture 3]()
+- [Slides for lecture 3](3/slides/3.pdf)
 - [The Java Tutorials: **Streams and Parallelism** ](http://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html)
 
 ## Projects ##
