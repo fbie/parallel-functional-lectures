@@ -19,7 +19,7 @@ Your task in this project is to extend the ```eval``` and ```parse``` functions 
 
 2. Add a new operator ```neg``` which takes only one argument and produces the negative value of it.
 
-3. Add boolean expressions, just like we have arithmetics, called ```Bool```. We need ```=``` ```<``` and ```>``` operators. Make sure to change the type of ```Env``` to ```(U Number Boolean)``` to also be able to store booleans. Also, you need to change the return type of eval to ```(U Number Boolean)```.
+3. Add boolean expressions, just like we have arithmetics, called ```Bool```. We need ```=``` ```<``` and ```>``` operators. Make sure to change the type of ```Env``` to ```(U Number Boolean)``` to also be able to store booleans. Also, you need to change the return type of ```eval``` to ```(U Number Boolean)```. You may have to implement two or more specialized versions of ```eval``` to make sure that the types are always correct!
 
 4. What fun are boolean expressions without if-statements? Implement an if-expression called ```Cond```, with the following syntax: ```(if b e1 e2)``` (you can parse it using ``` `(if ,b ,e1 ,e2)``` to match the expression). If ```b``` evaluates to true, execute ```e1```, otherwise execute ```e2```.
 
