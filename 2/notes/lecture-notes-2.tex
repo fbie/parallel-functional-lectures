@@ -61,6 +61,8 @@
 \begin{document}
 \maketitle
 
+This document focuses on the practical side of parallel programming. \citet{Erdmann2016Parallelism} covers this topic, including cost semantics, much more thoroughly.
+
 \section{Sequential and Parallel Expressions}
 
 Imagine you write this expression in Racket:
@@ -328,7 +330,7 @@ By creating a new future at each node, we make sure that we exploit as much para
 
 \section{Limiting Parallelism with Ropes}
 
-If the size of the tree is too small, then the overhead of constructing \lstinline{future}s dominates the run-time cost. We can handle this problem by using lists as leaves instead of scalar values to limit the degree of parallelism for small input sizes. We can use a data structure called a \emph{Rope}, which is a binary tree with sequential lists (or arrays) as leaves:
+If the size of the tree is too small, then the overhead of constructing \lstinline{future}s dominates the run-time cost. We can handle this problem by using lists as leaves instead of scalar values to limit the degree of parallelism for small input sizes. We can use a data structure called a \emph{Rope}, which is a binary tree with sequential lists (or arrays) as leaves \cite{Boehm1995Ropes}:
 
 \begin{lstlisting}
 (define-type (Ropeof A) (U (leaf A) (cat A)))
@@ -432,5 +434,8 @@ Does this mean that we can parallelize \emph{all} higher-order functions that we
 We have learned that we can parallelize functions that are \emph{associative}. Therefore, in order to parallelize \emph{fold}, we must show that \lstinline{f} is commutative. If you look at its type, it becomes clear that it is not. Let us assume that we have a rope with a left and a right subtree. If we compute \emph{fold} for the left side and for the right side, following the definition of \emph{fold}, we end up with two values for each side, both of type $B$. But our function $f$ is of type $B \rightarrow A \rightarrow B$, which means we do not know how to combine two values of type $B$.
 
 Therefore, we cannot parallelize \emph{fold} unless we add a second function parameter of type $B \rightarrow B \rightarrow B$. It turns out, that this is not necessary, because we can instead use \emph{map} and \emph{reduce} to achieve the same result.
+
+\bibliographystyle{plainnat}
+\bibliography{fbie}
 
 \end{document}
