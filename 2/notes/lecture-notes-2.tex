@@ -56,7 +56,7 @@
 \title{Lecture Notes:\\Functional Programming in Typed Racket}
 \author{Florian Biermann \\\small{\texttt{fbie@itu.dk}} \\~}
 
-\date{2016-05-26}
+\date{2016-06-17}
 
 \begin{document}
 \maketitle
@@ -206,7 +206,9 @@ You will quickly see that there is no way to efficiently combine two lists witho
     \node (b) [cons={\lstinline{'b}}{}];
     \node (c) [cons={\lstinline{'c}}{}];
     \node (d) [cons={\lstinline{'d}}{}];
-    \node (e) [cons={\lstinline{'e}}{$\emptyset$}];
+    \node (e) [cons={\lstinline{'e}}{}];
+    \node (f) [cons={\lstinline{'f}}{}];
+    \node (g) [cons={\lstinline{'g}}{$\emptyset$}];
   \end{tikzpicture}
 \end{center}
 
@@ -230,20 +232,20 @@ What can we do instead? We can create a new data structure that supports paralle
     \node [circle, draw] {}
     child {node [circle, draw] {}
       child {node [circle, draw] {}
-        child {node [rectangle, draw] {}}
-        child {node [rectangle, draw] {}}
+        child {node [rectangle, draw] {\lstinline{'a}}}
+        child {node [rectangle, draw] {\lstinline{'b}}}
       }
       child {node [circle, draw] {}
-        child {node [rectangle, draw] {}}
-        child {node [rectangle, draw] {}}
+        child {node [rectangle, draw] {\lstinline{'c}}}
+        child {node [rectangle, draw] {\lstinline{'d}}}
       }
     }
     child {node [circle, draw] {}
       child {node [circle, draw] {}
-        child {node [rectangle, draw] {}}
-        child {node [rectangle, draw] {}}
+        child {node [rectangle, draw] {\lstinline{'e}}}
+        child {node [rectangle, draw] {\lstinline{'f}}}
       }
-      child {node [rectangle, draw] {}}
+      child {node [rectangle, draw] {\lstinline{'g}}}
     };
   \end{tikzpicture}
 \end{center}
@@ -251,7 +253,8 @@ What can we do instead? We can create a new data structure that supports paralle
 Now, we can implement a map-function on \lstinline{(CatListof A)} instances:
 
 \begin{lstlisting}
-(: cat-map (All (A B) (-> (-> A B) (CatListof A) (CatListof B))))
+(: cat-map
+  (All (A B) (-> (-> A B) (CatListof A) (CatListof B))))
 (define (cat-map f xs)
   (match xs
     [(leaf x) (leaf (f x))]
@@ -280,7 +283,8 @@ This is still not parallel. However, the only way we can write a map-function fo
 Racket and Typed Racket use a fork/join style model of parallel computations. Fork is called \lstinline{future} and join is called \lstinline{touch}. We can use it to compute two functions in parallel as follows:
 
 \begin{lstlisting}
-(: in-parallel (All (A B C) (-> (-> A B) (-> A C) A (Pairof B C))))
+(: in-parallel
+  (All (A B C) (-> (-> A B) (-> A C) A (Pairof B C))))
 (define (in-parallel f g x)
   (let ([fx (future (lambda () (f x)))]
         [gx (g x)])
@@ -303,7 +307,8 @@ This are the types of \lstinline{future} and \lstinline{touch}:
 Let us return to implementing a parallel version of a map-function for \lstinline{(CatListof A)}. We now have all the tools we need: a data-structure already laid out for parallelism and a way to express parallel computations in the language. So let's look at how the code for \lstinline{cat-map} looks like if we apply \lstinline{future} and \lstinline{touch}:
 
 \begin{lstlisting}
-(: par-map (All (A B) (-> (-> A B) (CatListof A) (CatListof B))))
+(: par-map
+  (All (A B) (-> (-> A B) (CatListof A) (CatListof B))))
 (define (par-map f xs)
   (match xs
     [(leaf x) (leaf (f x))]
@@ -315,7 +320,7 @@ Let us return to implementing a parallel version of a map-function for \lstinlin
          (cat (touch fl) (touch fr)))]))
 \end{lstlisting}
 
-As you can see, we keep the overall structure of the function. The base-case for leaves remains completely untouched. Notice that the types of \lstinline{cat-map} and \lstinline{par-map} are identical. The difference is that, instead of calling \lstinline{par-map} recursively directly, we wrap the recursive call in a lambda-expression which we pass to the \lstinline{future} constructor. After we have created a future for the left and the right sub-tree of the list, we wait for both computations using \lstinine{touch} and then we combine the two resulting lists using \lstinline{cat}.
+As you can see, we keep the overall structure of the function. The base-case for leaves remains completely untouched. Notice that the types of \lstinline{cat-map} and \lstinline{par-map} are identical. The difference is that, instead of calling \lstinline{par-map} recursively directly, we wrap the recursive call in a lambda-expression which we pass to the \lstinline{future} constructor. After we have created a future for the left and the right sub-tree of the list, we wait for both computations using \lstinline{touch} and then we combine the two resulting lists using \lstinline{cat}.
 
 We call parallelism on aggregate data structures \emph{data-parallelism}, because the parallelism stems from the fact that we apply the same function to many different inputs in parallel.
 
@@ -331,5 +336,101 @@ If the size of the tree is too small, then the overhead of constructing \lstinli
 (struct (A) cat  ([l  : (Ropeof A)]
                   [r  : (Ropeof A)]))
 \end{lstlisting}
+
+We need to define a value $s_{\max}$ that limits the length of the leaf arrays. Here is an illustration of such a rope, where the $s_{\max} = 3$:
+
+\begin{center}
+  \begin{tikzpicture}[level distance=0.75cm]
+    \tikzstyle{level 1}=[sibling distance=6.8cm]
+    \tikzstyle{level 2}=[sibling distance=3.4cm]
+    \tikzstyle{level 3}=[sibling distance=1.7cm]
+    \node [circle, draw] {}
+    child {node [circle, draw] {}
+      child {node [circle, draw] {}
+        child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+        child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+      }
+      child {node [circle, draw] {}
+        child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+        child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+      }
+    }
+    child {node [circle, draw] {}
+      child {node [circle, draw] {}
+        child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+        child {node [rectangle split, rectangle split horizontal, rectangle split parts=3, draw] {}}
+      }
+      child {node [rectangle split, rectangle split horizontal, rectangle split parts=2, draw] {}}
+    };
+  \end{tikzpicture}
+\end{center}
+
+Choosing the a good value for $s_{\max}$ is important. If we set $s_{\max}$ too low, our algorithms will probably create excessively many \lstinline{future} instances, but if we set $s_{\max}$ too high, we will not expose enough parallelism to gain any performance benefits.
+
+Finding a good value for $s_{\max}$ depends a lot on the application. Do you expect to map mostly long-running functions on your collection? Will this function have roughly the same run-time for each input or will it vary heavily? There are many factors that you need to consider.
+
+How do we implement \emph{map} for this data structure? It is actually quite similar to our \lstinline{CatListof A} implementation. But because the leaves of the rope are not scalar values but another collection data type, we must rely on using also a higher-order \emph{map} function for this data structure. Since we use the built-in \lstinline{cons} list, we can simply use the default \lstinline{map} function that comes with it:
+
+\begin{center}
+\begin{lstlisting}
+(: rope-map
+  (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
+(define (rope-map f rope)
+  (match rope
+    [(leaf as) (leaf (map f as))]
+    [(cat l r) (cat (rope-map f l)
+                    (rope-map f r))]))
+\end{lstlisting}
+\end{center}
+
+This is a straight-forward implementation of \emph{map} on ropes. The base case for leaves does not apply the function \lstinline{f} directly. Instead, it calls \lstinline{map} on \lstinline{cons} lists and passes \lstinline{f} on to the call.
+
+The recursive case for \lstinline{cat} simply decomposes the rope into its subtrees and calls itself recursively just as we did it for the \lstinline{CatListof A}.
+
+We can now proceed and write a parallel version of this function. All we need to do is, again, to wrap the recursive calls to \lstinline{rope-map} in a lambda expression and pass it to \lstinline{future}. We call this version of \lstinline{rope-map} simply \lstinline{rope-pmap}, where p stands for ``parallel''. Notice again that the types of both functions are the same. Notice furthermore that we again do not change the base case for \lstinline{leaf}, because here, we explicitly prefer sequential execution:
+
+\begin{lstlisting}
+(: rope-pmap
+  (All (A B) (-> (-> A B) (Ropeof A) (Ropeof B))))
+(define (rope-pmap f rope)
+  (match rope
+    [(leaf as) (leaf (map f as))]
+    [(cat l r) (let [(l0 (future (lambda ()
+                                   (rope-pmap f l))))
+                     (r0 (future (lambda ()
+                                   (rope-pmap f r))))]
+                 (cat (touch l0) (touch r0)))]))
+\end{lstlisting}
+
+If we want to proceed to parallelize more functions on ropes, we simply can first implement the simplest sequential version of the function that we can think of. Then, in the next step, we can simply wrap the recursive call in a lambda expression and pass it to a call to \lstinline{future}. We do not need to worry about thread safety, because the sub-trees are completely disjoint, so the computations will not interfere with each other.
+
+Here is another example, the implementations for the rope versions of \emph{reduce}, namely \lstinline{rope-reduce} and \lstinline{rope-preduce}:
+
+\begin{lstlisting}
+(: rope-reduce
+  (All (A) (-> (-> A A A) (Ropeof A) A)))
+(define (rope-reduce f rope)
+  (match rope
+    [(leaf as) (list-reduce f as)]
+    [(cat l r) (f (rope-reduce f l)
+                  (rope-reduce f r))]))
+
+(: rope-preduce
+  (All (A) (-> (-> A A A) (Ropeof A) A)))
+(define (rope-preduce f rope)
+  (match rope
+    [(leaf as) (list-reduce f as)]
+    [(cat l r) (let [(l0 (future (lambda ()
+                                   (rope-preduce f l))))
+                     (r0 (future (lambda ()
+                                    (rope-preduce f r))))]
+                 (f (touch l0) (touch r0)))]))
+\end{lstlisting}
+
+Does this mean that we can parallelize \emph{all} higher-order functions that we can think of? It turns out that this is not the case. For instance, the general \emph{fold} function is of type $(B \rightarrow A \rightarrow B) \rightarrow B \rightarrow [A] \rightarrow B$, where $[A]$ denotes a collection of values of type $A$. We can write this type in Typed Racket for \lstinline{cons} list as \lstinline{(All (A B) (-> (-> B A B) B (Listof A) B))}.
+
+We have learned that we can parallelize functions that are \emph{associative}. Therefore, in order to parallelize \emph{fold}, we must show that \lstinline{f} is commutative. If you look at its type, it becomes clear that it is not. Let us assume that we have a rope with a left and a right subtree. If we compute \emph{fold} for the left side and for the right side, following the definition of \emph{fold}, we end up with two values for each side, both of type $B$. But our function $f$ is of type $B \rightarrow A \rightarrow B$, which means we do not know how to combine two values of type $B$.
+
+Therefore, we cannot parallelize \emph{fold} unless we add a second function parameter of type $B \rightarrow B \rightarrow B$. It turns out, that this is not necessary, because we can instead use \emph{map} and \emph{reduce} to achieve the same result.
 
 \end{document}
