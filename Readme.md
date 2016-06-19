@@ -14,7 +14,8 @@ We will not cover topics such as monads (even though we will look at the *Maybe*
 
 - [The Racket Guide: **Types in Typed Racket**](https://docs.racket-lang.org/ts-guide/types.html)
 - [Slides](1/slides/1.pdf)
-- [Code from the lecture](1/1.rkt)_
+- [Code from the lecture](1/1.rkt)
+- [Lecture notes](1/notes/lecture-notes-1.pdf)
 
 ### Installing Racket ###
 
@@ -50,6 +51,7 @@ One such way is the *Rope* data structure. A rope is a binary tree with lists (o
 - [Slides](2/slides/2.pdf)
 - [Parallel expressions in Racket](2/parexpr.rkt)
 - [Rope code from the lecture](2/ropes-lecture.rkt)
+- [Lecture notes](2/notes/lecture-notes-2.pdf)
 
 ## Lecture 3: Java 8 Streams ##
 
