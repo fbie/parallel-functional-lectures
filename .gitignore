@@ -7,3 +7,5 @@
 *.toc
 *.snm
 *.vrb
+*.bbl
+*.blg
