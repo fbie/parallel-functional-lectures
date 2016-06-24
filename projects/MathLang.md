@@ -4,7 +4,7 @@ The file [mathlang.rkt](https://github.com/fbie/parallel-functional-lectures/blo
 
 ```
 (eval (parse '(+ 1 2)) '())
-(eval (parse '(let (x 5) (+ x x))) '())```
+(eval (parse '(let (x 5) (+ x x))) '())
 ```
 
 (```'()``` is the empty environment or value store for the start of the execution.)
@@ -32,7 +32,7 @@ Your task in this project is to extend the ```eval``` and ```parse``` functions 
 For 1:
 ```
 (eval (parse '(* 2 5)) '())
-(eval (parse '(let (x (* 2 5) (/ x x)))) '())
+(eval (parse '(let (x (* 2 5)) (/ x x))) '())
 ```
 
 For 2:
